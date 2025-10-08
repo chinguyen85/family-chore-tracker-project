@@ -1,23 +1,28 @@
 const mongoose = require('mongoose')
 
 const familySchema = mongoose.Schema({
-  name:
-  {
-    type:String,
+  familyName: {
+    type: String,
     required: true
   },
-  members:
-  {
+  inviteCode: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  supervisorId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Person',
+    ref: 'User',
     required: true
   },
-  tasks:
-  {
+  members: [{ ////////
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Task',
-    required: true
-  }
+    ref: 'User'
+  }],
+  tasks: [{ ////////
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Task'
+  }]
 })
 
 familySchema.set('toJSON', {
@@ -29,4 +34,4 @@ familySchema.set('toJSON', {
 })
 
 
-module.exports = mongoose.model('Family', blogSchema) 
+module.exports = mongoose.model('Family', familySchema) 

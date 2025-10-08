@@ -1,29 +1,40 @@
 const mongoose = require('mongoose')
 
 const taskSchema = mongoose.Schema({
-  title:
-  {
+  title: {
     type: String,
     required: true
   },
-  content: String,
-  family:
-  {
+  description: {
+    type: String,
+    required: true
+  },
+  rewardValue: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  dueDate: {
+    type: Date,
+    required: true
+  },
+  notificationTime: {
+    type: Date
+  },
+  familyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Family',
     required: true
   },
-  assignTo:
-  {
+  assignTo: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Person',
+    ref: 'User',
     required: true
   },
-  status:
-  {
+  status: {
     type: String,
-    enum:['in_progress', 'done']
-  
+    enum: ['pending', 'in_progress', 'completed'],
+    default: 'pending'
   }
 })
 
@@ -35,4 +46,4 @@ taskSchema.set('toJSON', {
   }
 })
 
-module.exports = mongoose.model('Task', blogSchema) 
+module.exports = mongoose.model('Task', taskSchema) 
