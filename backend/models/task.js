@@ -7,7 +7,7 @@ const taskSchema = mongoose.Schema({
   },
   description: {
     type: String,
-    required: true
+    required: false
   },
   rewardValue: {
     type: Number,
@@ -27,14 +27,14 @@ const taskSchema = mongoose.Schema({
     required: true
   },
   assignTo: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'User',
     required: true
   },
   status: {
     type: String,
-    enum: ['pending', 'in_progress', 'completed'],
-    default: 'pending'
+    enum: ['Pending', 'For_Approval', 'Completed', 'Rejected'],
+    default: 'Pending'
   }
 })
 

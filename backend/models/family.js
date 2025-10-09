@@ -15,14 +15,14 @@ const familySchema = mongoose.Schema({
     ref: 'User',
     required: true
   },
-  members: [{ ////////
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  tasks: [{ ////////
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Task'
-  }]
+  // members: [{ ////////
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'User'
+  // }],
+  // tasks: [{ ////////
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'Task'
+  // }]
 })
 
 familySchema.set('toJSON', {

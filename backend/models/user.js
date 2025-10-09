@@ -21,11 +21,12 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['supervisor', 'member'],
-        default: 'member', 
+        enum: ['Supervisor', 'Member'],
+        default: 'Member', 
     },
     familyId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Family',
         required: false // Can be set later when creating/joining a family group
     },
     starTotal: {
@@ -40,7 +41,19 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: null
     }
-}); 
+});
+
+// Customize JSON output to convert _id to a string and exclude sensitive information
+userSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString();
+        delete returnedObject._id;
+        delete returnedObject.__v;
+        delete returnedObject.password; // Exclude password hash
+        delete returnedObject.resetPasswordToken; // Exclude reset token
+        delete returnedObject.resetPasswordExpires; // Exclude reset expiry
+    }
+});
 
 // Pre-save hook to hash passwords
 userSchema.pre('save', async function(next) {
@@ -55,12 +68,9 @@ userSchema.pre('save', async function(next) {
 });
 
 // Method to compare password for login
-userSchema.methods.comparePassword = async function(candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.password);
+userSchema.methods.matchPassword = async function(enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
 };
-// userSchema.methods.matchPassword = async function(enteredPassword) {
-//     return await bcrypt.compare(enteredPassword, this.password);
-// };
 
 // Create and export the User model
 const User = mongoose.model('User', userSchema);
