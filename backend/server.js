@@ -34,6 +34,11 @@ app.get('/', (req, res) => {
     res.send('Family Chore Tracker API');
 });
 
+// Import routes files and mount routes
+const authRoutes = require('./routes/auth');
+
+app.use('/', authRoutes);
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
