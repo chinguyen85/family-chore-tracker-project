@@ -25,7 +25,7 @@ const sendTokenResponse = (user, statusCode, res) => {
 };
 
 // Handle user signup request (route POST /signup)
-exports.register = async (req, res, next) => {
+exports.register = async (req, res) => {
     console.log('Signup attempt received for email:', req.body.email);
     const { fullName, email, password } = req.body;
 
@@ -50,7 +50,7 @@ exports.register = async (req, res, next) => {
 };
 
 // Handle user login request (route POST /login)
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
     console.log('Login attempt received for email:', req.body.email);
     const { email, password } = req.body;
     // Validate email & password
@@ -78,7 +78,7 @@ exports.login = async (req, res, next) => {
 };
 
 // Handle forgot password request (route POST /forgot-password)
-exports.forgotPassword = async (req, res, next) => {
+exports.forgotPassword = async (req, res) => {
     console.log('Forgot password attempt received for email:', req.body.email);
     const { email, newPassword } = req.body;
     
