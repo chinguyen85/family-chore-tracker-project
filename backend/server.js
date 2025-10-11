@@ -39,6 +39,9 @@ const authRoutes = require('./routes/auth');
 
 app.use('/', authRoutes);
 
+const tasksRouter = require('./routes/tasks') 
+app.use('/api/tasks', tasksRouter)
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
