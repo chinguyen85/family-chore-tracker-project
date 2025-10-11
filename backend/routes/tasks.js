@@ -1,5 +1,7 @@
 const tasksRouter = require('express').Router()
 const tasksController = require('./tasksController')
+const { protect } = require('../middleware/auth')
+tasksRouter.use(protect)
 
 tasksRouter.get('/', tasksController.getAllTasks)
 
