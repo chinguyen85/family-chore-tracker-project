@@ -4,7 +4,7 @@ const User = require('../models/user')
 
 const getAllTasks = async (request, response) => {
     try {
-        const tasks = await Task.find({})
+        const tasks = await Task.find({ familyId: request.user.familyId}) //only one family
         response.json(tasks) 
     } catch (error) {
         response.status(500).json({ error: error.message })
@@ -13,7 +13,10 @@ const getAllTasks = async (request, response) => {
 
 const getTaskById = async (request, response) => {
     try {
-        const task = await Task.findById(request.params.id)
+        const task = await Task.findOne({
+            _id: request.params.id,
+            familyId: request.user.familyId
+        })
         if (task) {
             response.json(task)
         } else {
@@ -29,7 +32,7 @@ const postTask = async (request, response) => {
         || !request.body.title 
         || !request.body.rewardValue
         || !request.body.dueDate
-        || !request.body.familyId
+        || !request.user.familyId//
         || !request.body.assignTo)
         return response.status(400).end()
 
@@ -39,9 +42,9 @@ const postTask = async (request, response) => {
             description: request.body.description || '', 
             rewardValue: request.body.rewardValue,
             dueDate: request.body.dueDate,
-            familyId: request.body.familyId,
+            familyId: request.user.familyId, // get from auth
             assignTo: request.body.assignTo,
-            notificationTime: request.body.notificationTime, //
+            notificationTime: request.body.notificationTime, 
             status: 'Pending'
         })
 
@@ -54,9 +57,15 @@ const postTask = async (request, response) => {
 
 const updateTask = async (request, response) => {
     try {
-        const updatedTask = await Task.findByIdAndUpdate (
-            request.params.id,
+        const updatedTask = await Task.findOneAndUpdate (
+            // query conditions
+            {
+                _id: request.params.id,
+                familyId: request.user.familyId // add family auth
+            },
+            //update data
             request.body,
+            //options configuration
             {
                 new: true, //return new
                 runValidators: true //valitate schema
@@ -75,7 +84,10 @@ const updateTask = async (request, response) => {
 
 const deleteTask = async (request, response) => {
     try {
-        const task = await Task.findByIdAndDelete(request.params.id)
+        const task = await Task.findOneAndDelete({
+            _id: request.params.id,
+            familyId: request.user.familyId
+        })
 
         if(!task){
             return response.status(404).json({ error: 'Task not found'})
