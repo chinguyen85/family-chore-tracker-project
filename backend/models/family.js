@@ -1,9 +1,11 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 const familySchema = mongoose.Schema({
   familyName: {
     type: String,
-    required: true
+    required: [true, 'Family name is required'],
+    trim: true
   },
   inviteCode: {
     type: String,
@@ -15,15 +17,14 @@ const familySchema = mongoose.Schema({
     ref: 'User',
     required: true
   },
-  // members: [{ ////////
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'User'
-  // }],
-  // tasks: [{ ////////
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'Task'
-  // }]
 })
+
+// Method to generate invite code
+familySchema.methods.getInviteCode = function() {
+  const code = crypto.randomBytes(3).toString('hex').toUpperCase(); // Generates an 6-character hex string
+  this.inviteCode = code;
+  return code;
+}
 
 familySchema.set('toJSON', {
   transform: (document, returnedObject) => {

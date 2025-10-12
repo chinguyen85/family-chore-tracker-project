@@ -36,11 +36,12 @@ app.get('/', (req, res) => {
 
 // Import routes files and mount routes
 const authRoutes = require('./routes/auth');
+const taskRoutes = require('./routes/tasks');
+const familyRoutes = require('./routes/family');
 
 app.use('/', authRoutes);
-
-const tasksRouter = require('./routes/tasks') 
-app.use('/api/tasks', tasksRouter)
+app.use('/tasks', taskRoutes)
+app.use('/family', familyRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
