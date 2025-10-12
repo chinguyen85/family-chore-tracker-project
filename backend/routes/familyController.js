@@ -65,13 +65,26 @@ exports.joinFamily = async (req, res) => {
     }
 };
 
-// Handle fetching family details by ID (route GET /:familyId)
-exports.getFamilyById = async (req, res) => {
-    const { familyId } = req.params;
+// Handle fetching family details of the logged in user (route GET /)
+exports.getFamilyDetails = async (req, res) => {
+    const userFamilyId = req.user.familyId;
+
+    // Ensure the user belongs to the requested family
+    if (!userFamilyId) {
+        return res.status(400).json({ success: false, error: 'User does not belong to a family.' });
+    }
 
     try {
-        // Find the family by ID and populate supervisor and members
-        const family = await Family.findById(familyId).populate('supervisorId', 'fullName email role').populate('members', 'fullName email role');
+        // Find the family by ID and populate supervisor details
+        let familyQuery = await Family.findById(familyId).populate('supervisorId', 'fullName email role');
+
+        // If user is Supervisor, include the invite code and execute the query
+        if (req.user.role === 'Supervisor') {
+            familyQuery = await Family.findById(familyId).select('+inviteCode').populate('supervisorId', 'fullName email role');
+        }
+        const family = await familyQuery;
+
+        // If no family found, return 404
         if (!family) {
             return res.status(404).json({ success: false, error: 'Family not found.' });
         }
@@ -82,6 +95,31 @@ exports.getFamilyById = async (req, res) => {
             data: family
         });
     } catch (err) {
+        console.error('Error fetching family by ID:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+// Handle fetching family members by family ID (route GET /:familyId/members)
+exports.getFamilyMembers = async (req, res) => {
+    const { familyId } = req.user.familyId;
+    
+    if (!familyId) {
+        return res.status(400).json({ success: false, error: 'User does not belong to any family.' });
+    }
+
+    try {
+        // Find all users with the same familyId
+        const members = await User.find({ familyId }).select('fullName email role starTotal');
+
+        // Return members list in JSON format with OK status
+        res.status(200).json({
+            success: true,
+            count: members.length,
+            data: members
+        });
+    }
+    catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
 };

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user'); // Assuming the path is correct
+const User = require('../models/user');
 
+// Middleware to protect routes and ensure the user is authenticated
 const protect = async (req, res, next) => {
     console.log('Protect middleware invoked');
     let token;
@@ -35,4 +36,26 @@ const protect = async (req, res, next) => {
     }
 };
 
-module.exports = { protect };
+// Middleware to authorize based on user roles
+const authorize = (roles = []) => {
+    console.log('Authorize middleware invoked with roles:', roles);
+    // Convert roles to an array if it is a single string
+    if (typeof roles === 'string') {
+        roles = [roles];
+    }
+
+    return (req, res, next) => {
+        // Check if user exits and has one of the required roles
+        if (!req.user) {
+            return res.status(401).json({ success: false, error: 'Unauthorized' });
+        }
+        if (roles.length > 0 && !roles.includes(req.user.role)) {
+            return res.status(403).json({ success: false, error: `Forbidden. User role ${req.user.role} not authorized.` });
+        }
+        
+        // If authorization successful, proceed
+        next();
+    };
+}
+
+module.exports = { protect, authorize };
