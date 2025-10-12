@@ -2,6 +2,7 @@ const Task = require('../models/task')
 const Family = require('../models/family')
 const User = require('../models/user')
 
+// get all family tasks
 const getAllTasks = async (request, response) => {
     try {
         const tasks = await Task.find({ familyId: request.user.familyId}) //only one family
@@ -11,6 +12,7 @@ const getAllTasks = async (request, response) => {
     } 
 }
 
+// get one task by id
 const getTaskById = async (request, response) => {
     try {
         const task = await Task.findOne({
@@ -27,6 +29,7 @@ const getTaskById = async (request, response) => {
     }
 }
 
+// post a new task
 const postTask = async (request, response) => {
     if(!request.body 
         || !request.body.title 
@@ -55,6 +58,7 @@ const postTask = async (request, response) => {
     }
 }
 
+// update a task
 const updateTask = async (request, response) => {
     try {
         const updatedTask = await Task.findOneAndUpdate (
@@ -82,6 +86,7 @@ const updateTask = async (request, response) => {
     }
 }
 
+// delete one task
 const deleteTask = async (request, response) => {
     try {
         const task = await Task.findOneAndDelete({
@@ -98,6 +103,45 @@ const deleteTask = async (request, response) => {
     }
 }
 
+//complete one task
+const updateTaskStatus = async (request, response) => {
+    const newStatus = request.body.status
+
+    if (!newStatus) 
+        return response.status(400).json({ error: 'Status is required' })
+    
+
+    try {
+        // find task
+        const task = await Task.findOne({
+            _id: request.params.id,
+            familyId: request.user.familyId
+        })
+
+        if (!task) {
+            return response.status(404).json({ error: 'Task not found' })
+        }
+
+        //only supervisor can approve or reject
+        if(request.user.role !== 'Supervisor' && (newStatus === 'Completed' || newStatus === 'Rejected')){
+            return response.status(403).json({ error: 'Only supervisors can approve/reject tasks' })
+        }
+
+        if (newStatus === 'For_Approval' && !task.assignTo.includes(request.user._id)){
+            return response.status(403).json({ error: 'You can not complete tasks that are not assigned to you' })
+        }
+
+        //update task
+        task.status = newStatus
+        const updatedTask = await task.save()
+    
+        response.json(updatedTask)
+    } catch (error) {
+        response.status(400).json({ error: error.message})
+        
+    }
+}
+
 module.exports =  {
-    getAllTasks, getTaskById, postTask, updateTask, deleteTask
+    getAllTasks, getTaskById, postTask, updateTask, deleteTask, updateTaskStatus
 } 
