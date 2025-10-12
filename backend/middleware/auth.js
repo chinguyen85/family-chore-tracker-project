@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // Assuming the path is correct
+const User = require('../models/user'); // Assuming the path is correct
 
 const protect = async (req, res, next) => {
     console.log('Protect middleware invoked');
