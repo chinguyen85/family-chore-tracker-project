@@ -13,4 +13,7 @@ tasksRouter.put('/:id', tasksController.updateTask)
 
 tasksRouter.delete('/:id', tasksController.deleteTask)
 
+//update task status
+tasksRouter.patch('/:id/status', tasksController.updateTaskStatus)
+
 module.exports = tasksRouter
