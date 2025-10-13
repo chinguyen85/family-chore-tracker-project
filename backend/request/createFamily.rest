@@ -1,0 +1,13 @@
+POST http://localhost:3000/family/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWMwNDQ4ZjBjYmJjZWM2YjA3OTdkYiIsImlhdCI6MTc2MDM1ODMxMn0.OLRNyZed1RVwrw7Ze7XxRh11RH71tWFn7hl9U2vT9d4
+
+{
+    "familyName" : "peppaa familly"
+}
+
+
+# {
+#   "success": false,
+#   "error": "Family validation failed: inviteCode: Path `inviteCode` is required."
+# }
