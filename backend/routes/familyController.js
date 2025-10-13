@@ -3,6 +3,7 @@ const User = require('../models/user');
 
 // Handle family creation by authenticaed users (route POST /create)
 exports.createFamily = async (req, res) => {
+
     const { familyName } = req.body;
     const supervisorId = req.user.id; // User ID comes from the 'protect' middleware
 
@@ -10,6 +11,7 @@ exports.createFamily = async (req, res) => {
     if (req.user.familyId) {
         return res.status(400).json({ success: false, error: 'User already belongs to a family.' });
     }
+
 
     try {
         // Create the Family document, get and save the invite code
