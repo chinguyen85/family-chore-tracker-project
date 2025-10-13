@@ -12,8 +12,8 @@ exports.createFamily = async (req, res) => {
     }
 
     try {
-        // Create the Family document, get and save the invite code
-        const family = await Family.create({
+        // Create new family, get invite code and save the document
+        const family = new Family({
             familyName,
             supervisorId // Set the creator
         });
@@ -31,7 +31,7 @@ exports.createFamily = async (req, res) => {
             }
         });
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(400).json({ success: false, error: err.message });
     }
 };
 
@@ -76,7 +76,7 @@ exports.getFamilyDetails = async (req, res) => {
 
     try {
         // Find the family by ID and populate supervisor details
-        let familyQuery = await Family.findById(userFamilyId).populate('supervisorId', 'fullName email role');
+        let familyQuery = Family.findById(userFamilyId).populate('supervisorId', 'fullName email role');
 
         // If user is Supervisor, include the invite code and execute the query
         if (req.user.role === 'Supervisor') {

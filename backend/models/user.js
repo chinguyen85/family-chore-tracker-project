@@ -1,6 +1,7 @@
 // User schema includes fields for email, password (hashed), fullName, role (supervisor/member), familyId, and starTotal
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -70,6 +71,13 @@ userSchema.pre('save', async function(next) {
 // Method to compare password for login
 userSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Method to generate JWT
+userSchema.methods.getSignedJwtToken = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_TOKEN, {
+        expiresIn: '30d'
+    });
 };
 
 // Create and export the User model
