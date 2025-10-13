@@ -6,7 +6,14 @@ const User = require('../models/user');
 // Helper function to get token from user and send response
 const sendTokenResponse = (user, statusCode, res) => {
     // Get token
-    const token = user.getSignedJwtToken();
+    //const token = user.getSignedJwtToken();
+    
+    const userForToken = { 
+        id: user._id, 
+        familyId: user.familyId,
+    }
+
+    const token = jwt.sign(userForToken, process.env.JWT_TOKEN)
 
     // Send response in JSON
     res.status(statusCode).json({
@@ -45,7 +52,7 @@ exports.register = async (req, res) => {
     } catch (err) {
         // Response with bad request status & error message
         res.status(400).json({ success: false, error: err.message });
-        res.redirect('/register');
+        // res.redirect('/register');
     }
 };
 
@@ -72,8 +79,9 @@ exports.login = async (req, res) => {
         }
         sendTokenResponse(user, 200, res);
     } catch (err) {
+        console.error(err);//
         res.status(500).json({ success: false, error: 'Server error' }); // 500 Server error
-        res.redirect('/login');
+        //res.redirect('/login');
     }
 };
 
