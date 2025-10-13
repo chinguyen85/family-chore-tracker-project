@@ -32,7 +32,7 @@ exports.register = async (req, res) => {
     try {
         // Check if this is the first user
         const userCount = await User.countDocuments({});
-        const role = userCount === 0 ? 'supervisor' : 'member'; // Assign first user as supervisor
+        const role = userCount === 0 ? 'Supervisor' : 'Member'; // Assign first user as supervisor
         
         // Create user
         const user = await User.create({

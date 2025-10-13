@@ -76,11 +76,11 @@ exports.getFamilyDetails = async (req, res) => {
 
     try {
         // Find the family by ID and populate supervisor details
-        let familyQuery = await Family.findById(familyId).populate('supervisorId', 'fullName email role');
+        let familyQuery = await Family.findById(userFamilyId).populate('supervisorId', 'fullName email role');
 
         // If user is Supervisor, include the invite code and execute the query
         if (req.user.role === 'Supervisor') {
-            familyQuery = await Family.findById(familyId).select('+inviteCode').populate('supervisorId', 'fullName email role');
+            familyQuery = await familyQuery.select('+inviteCode');
         }
         const family = await familyQuery;
 
@@ -102,7 +102,7 @@ exports.getFamilyDetails = async (req, res) => {
 
 // Handle fetching family members by family ID (route GET /:familyId/members)
 exports.getFamilyMembers = async (req, res) => {
-    const { familyId } = req.user.familyId;
+    const familyId = req.user.familyId;
     
     if (!familyId) {
         return res.status(400).json({ success: false, error: 'User does not belong to any family.' });
