@@ -82,7 +82,7 @@ exports.getFamilyDetails = async (req, res) => {
 
         // If user is Supervisor, include the invite code and execute the query
         if (req.user.role === 'Supervisor') {
-            familyQuery = await familyQuery.select('+inviteCode');
+            familyQuery = familyQuery.select('+inviteCode');
         }
         const family = await familyQuery;
 
