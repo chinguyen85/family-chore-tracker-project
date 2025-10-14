@@ -1,7 +1,27 @@
+//supervisor
 POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-    "email": "newtest@abc.com",
+    "email": "testMama@abc.com",
+    "password": "password"
+}
+
+### member
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "testBaby1@abc.com",
+    "password": "password"
+}
+
+
+### 
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "test01@abc.com",
     "password": "password"
 }

@@ -1,10 +1,35 @@
+// Mom
 POST http://localhost:3000/signup
 Content-Type: application/json
 
 {
-    "email": "newtest@abc.com", 
+    "email": "testMama@abc.com", 
     "password": "password",
-    "fullName": "Test User",
+    "fullName": "mama",
     "role": "Supervisor"
 
+}
+
+### Baby1
+POST http://localhost:3000/signup
+Content-Type: application/json
+
+{
+    "email": "testBabyy1@abc.com", 
+    "password": "password",
+    "fullName": "peppa",
+    "role": "Member",
+    "familyId": "68ee94d40c10de36bffa94da"
+}
+
+### Baby2
+POST http://localhost:3000/signup
+Content-Type: application/json
+
+{
+    "email": "testBabyy2@abc.com", 
+    "password": "password",
+    "fullName": "george",
+    "role": "Member",
+    "familyId": "68ee94d40c10de36bffa94da"
 }

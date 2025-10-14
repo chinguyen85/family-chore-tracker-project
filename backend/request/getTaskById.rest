@@ -1,0 +1,7 @@
+GET http://localhost:3000/tasks/68eea273c53064c14783bc17
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NGU3MGMxMGRlMzZiZmZhOTRkZCIsImZhbWlseUlkIjoiNjhlZThiODMwYzEwZGUzNmJmZmE5NGI3IiwiaWF0IjoxNzYwNDY5NjA3fQ.WQ--dLrNS0RuNXb4sui7C5DPdJ11adc1QjE5l2MEgdw
+
+{
+    "familyId": "68ee94d40c10de36bffa94da"
+}

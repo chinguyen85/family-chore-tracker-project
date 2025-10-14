@@ -1,0 +1,7 @@
+GET http://localhost:3000/family/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImZhbWlseUlkIjoiNjhlZTk0ZDQwYzEwZGUzNmJmZmE5NGRhIiwiaWF0IjoxNzYwNDY2MzIzfQ.dKjs37IkagFGp-7e_Q1vTbFhDBQgePD5dihQ7ddRjxs
+
+{
+    "familyId": "68ee94d40c10de36bffa94da"
+}

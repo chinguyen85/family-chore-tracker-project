@@ -1,0 +1,7 @@
+DELETE http://localhost:3000/tasks/68eea6d3c53064c14783bc5d
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NGU3MGMxMGRlMzZiZmZhOTRkZCIsImZhbWlseUlkIjoiNjhlZThiODMwYzEwZGUzNmJmZmE5NGI3IiwiaWF0IjoxNzYwNDcwMzI0fQ.7JQTSB6Hae3zE54QDWdq9PAdqUgOIV-QKKw6RKLWX9g
+
+{
+    "familyId": "68ee8b830c10de36bffa94b7"
+}
