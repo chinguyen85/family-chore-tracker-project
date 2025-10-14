@@ -1,0 +1,7 @@
+POST http://localhost:3000/family/join
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWVhMTY2YzUzMDY0YzE0NzgzYmMwNSIsImlhdCI6MTc2MDQ2OTM1MH0.TUhOtaiJsWXitNU-533nvqbJIiWMw51zvkNC9gPxQIo
+
+{
+    "inviteCode": "F66E4A"
+}

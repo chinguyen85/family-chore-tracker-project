@@ -33,14 +33,11 @@ const sendTokenResponse = (user, statusCode, res) => {
 
 // Handle user signup request (route POST /signup)
 exports.register = async (req, res) => {
+    // test version
     console.log('Signup attempt received for email:', req.body.email);
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password, role } = req.body;
 
     try {
-        // Check if this is the first user
-        const userCount = await User.countDocuments({});
-        const role = userCount === 0 ? 'Supervisor' : 'Member'; // Assign first user as supervisor
-        
         // Create user
         const user = await User.create({
             fullName,
@@ -52,8 +49,30 @@ exports.register = async (req, res) => {
     } catch (err) {
         // Response with bad request status & error message
         res.status(400).json({ success: false, error: err.message });
-        // res.redirect('/register');
     }
+
+    // origin version
+    // console.log('Signup attempt received for email:', req.body.email);
+    // const { fullName, email, password } = req.body;
+
+    // try {
+    //     // Check if this is the first user
+    //     const userCount = await User.countDocuments({});
+    //     const role = userCount === 0 ? 'Supervisor' : 'Member'; // Assign first user as supervisor
+        
+    //     // Create user
+    //     const user = await User.create({
+    //         fullName,
+    //         email,
+    //         password,
+    //         role
+    //     });
+    //     sendTokenResponse(user, 201, res);
+    // } catch (err) {
+    //     // Response with bad request status & error message
+    //     res.status(400).json({ success: false, error: err.message });
+    //     res.redirect('/register');
+    // }
 };
 
 // Handle user login request (route POST /login)

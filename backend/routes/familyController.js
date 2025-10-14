@@ -17,7 +17,7 @@ exports.createFamily = async (req, res) => {
         // Create new family, get invite code and save the document
         const family = new Family({
             familyName,
-            supervisorId // Set the creator
+            supervisorId, // Set the creator
         });
         family.getInviteCode();
         await family.save();

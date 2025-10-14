@@ -1,0 +1,11 @@
+POST http://localhost:3000/tasks/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NGU3MGMxMGRlMzZiZmZhOTRkZCIsImZhbWlseUlkIjoiNjhlZThiODMwYzEwZGUzNmJmZmE5NGI3IiwiaWF0IjoxNzYwNDY5NjA3fQ.WQ--dLrNS0RuNXb4sui7C5DPdJ11adc1QjE5l2MEgdw
+
+{
+    "title": "task 0",
+    "rewardValue": 5,
+    "dueDate" : "2025-10-15",
+    "familyId": "68ee8b830c10de36bffa94b7",
+    "assignTo": "68ee96060c10de36bffa94f1"
+}
