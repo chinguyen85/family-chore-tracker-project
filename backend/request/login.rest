@@ -7,21 +7,21 @@ Content-Type: application/json
     "password": "password"
 }
 
-### member
+### peppa
 POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-    "email": "testBaby1@abc.com",
+    "email": "testbabyy1@abc.com",
     "password": "password"
 }
 
 
-### 
+### george
 POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-    "email": "test01@abc.com",
+    "email": "testbabyy2@abc.com",
     "password": "password"
 }

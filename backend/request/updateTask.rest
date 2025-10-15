@@ -1,11 +1,11 @@
-PUT http://localhost:3000/tasks/68eea5a9c53064c14783bc3b
+PUT http://localhost:3000/tasks/68eea273c53064c14783bc17
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NGU3MGMxMGRlMzZiZmZhOTRkZCIsImZhbWlseUlkIjoiNjhlZThiODMwYzEwZGUzNmJmZmE5NGI3IiwiaWF0IjoxNzYwNDcwMzI0fQ.7JQTSB6Hae3zE54QDWdq9PAdqUgOIV-QKKw6RKLWX9g
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImZhbWlseUlkIjoiNjhlZTk0ZDQwYzEwZGUzNmJmZmE5NGRhIiwiaWF0IjoxNzYwNTQ0NzY1fQ.cYz4PlEfW1PiwDKJleQ_lDLadhogK5lLvHQymmItNeM
 
 {
     "title": "up2",
     "rewardValue": 5,
     "dueDate" : "2025-10-15",
-    "familyId": "68ee8b830c10de36bffa94b7",
+    "familyId": "68ee94d40c10de36bffa94da",
     "assignTo": "68ee96060c10de36bffa94f1"
 }
