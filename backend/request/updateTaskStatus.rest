@@ -1,0 +1,17 @@
+PATCH http://localhost:3000/tasks/status/68eea58ac53064c14783bc33
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImZhbWlseUlkIjoiNjhlZTk0ZDQwYzEwZGUzNmJmZmE5NGRhIiwiaWF0IjoxNzYwNTQ0NzY1fQ.cYz4PlEfW1PiwDKJleQ_lDLadhogK5lLvHQymmItNeM
+
+{
+    "status": "Rejected"
+}
+
+
+### Peppa update
+PATCH http://localhost:3000/tasks/status/68eea273c53064c14783bc17
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWVhMTY2YzUzMDY0YzE0NzgzYmMwNSIsImZhbWlseUlkIjoiNjhlZTk0ZDQwYzEwZGUzNmJmZmE5NGRhIiwiaWF0IjoxNzYwNTQ2MDIwfQ.WC2Ed2XZRnRCKIve2Yc1Jd3fd63NTO7hG0OwbAeot1k
+
+{
+    "status": "For_Approval"
+}

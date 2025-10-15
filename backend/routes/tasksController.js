@@ -117,6 +117,12 @@ const updateTaskStatus = async (request, response) => {
             _id: request.params.id,
             familyId: request.user.familyId
         })
+        
+        console.log('updateTaskStatus:', {
+            id: request.params.id,
+            familyId: request.user.familyId,
+            status: request.body.status
+        });
 
         if (!task) {
             return response.status(404).json({ error: 'Task not found' })
