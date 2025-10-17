@@ -36,7 +36,7 @@ export const login = async (email, password) => {
         });
         return handleResponse(response);
     } catch (error) {
-        console.error('❌ Login fetch error:', error);
+        console.error('Login fetch error:', error);
         throw error;
     }
 };
