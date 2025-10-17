@@ -33,11 +33,11 @@ export const login = async (email, password) => {
     return handleResponse(response);
 };
 
-export const forgotPassword = async (email) => {
+export const forgotPassword = async (email, newPassword) => {
     const response = await fetch(`${BASE_URL}/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, newPassword }),
     });
     return handleResponse(response);
 };

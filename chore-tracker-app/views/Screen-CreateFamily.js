@@ -19,7 +19,7 @@ const FamilyCreationScreen = () => {
             // 1. Update the local user state and storage with the new familyId
             await updateUser({ familyId: data.id });
             
-            // 2. Success message (show invite code for sharing)
+            // 2. Show success message with invite code
             Alert.alert(
                 'Family Created!',
                 `Your invite code is: ${data.inviteCode}\nShare this with family members to let them join.`,
@@ -49,16 +49,37 @@ const FamilyCreationScreen = () => {
                 value={familyName}
                 onChangeText={setFamilyName}
             />
-            <Button title="Create Group" onPress={handleCreateFamily} disabled={!familyName} />
+            <Button
+                title="Create Group"
+                onPress={handleCreateFamily}
+                disabled={!familyName}
+            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', padding: 20 },
-    title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
-    label: { marginBottom: 10, textAlign: 'center' },
-    input: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 12, paddingHorizontal: 10 },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: 20
+    },
+    title: {
+        fontSize: 24,
+        marginBottom: 20,
+        textAlign: 'center'
+    },
+    label: {
+        marginBottom: 10,
+        textAlign: 'center'
+    },
+    input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 12,
+        paddingHorizontal: 10
+    },
 });
 
 export default FamilyCreationScreen;

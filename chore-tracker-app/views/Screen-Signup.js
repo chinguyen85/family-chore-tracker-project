@@ -22,10 +22,8 @@ const SignupScreen = () => {
             
             // 2. Role-Based Onboarding Logic
             if (user.role === 'supervisor') {
-                // Supervisor: Must create the family group
-                navigation.navigate('FamilyOnboarding');
+                navigation.navigate('FamilyCreation');
             } else {
-                // Member: Must join an existing group
                 navigation.navigate('FamilyJoin');
             }
 
@@ -57,16 +55,36 @@ const SignupScreen = () => {
                 value={password}
                 onChangeText={setPassword}
             />
-            <Button title="Register" onPress={handleSignup} />
-            <Button title="Already have an account? Sign In" onPress={() => navigation.navigate('Login')} />
+            <Button
+                title="Register"
+                onPress={handleSignup}
+            />
+            <Button
+                title="Already have an account? Sign In"
+                onPress={() => navigation.navigate('Login')}
+            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', padding: 20 },
-    title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
-    input: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 12, paddingHorizontal: 10 },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: 20
+    },
+    title: {
+        fontSize: 24,
+        marginBottom: 20,
+        textAlign: 'center'
+    },
+    input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 12,
+        paddingHorizontal: 10
+    },
 });
 
 export default SignupScreen;
