@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 
-import { AuthContext } from '../components/AuthContext';
+import { AuthContext } from '../components/authContext';
 import { joinFamily } from '../services/app';
 
 const FamilyJoinScreen = () => {
