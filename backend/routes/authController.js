@@ -6,14 +6,7 @@ const User = require('../models/user');
 // Helper function to get token from user and send response
 const sendTokenResponse = (user, statusCode, res) => {
     // Get token
-    //const token = user.getSignedJwtToken();
-    
-    const userForToken = { 
-        id: user._id, 
-        familyId: user.familyId,
-    }
-
-    const token = jwt.sign(userForToken, process.env.JWT_TOKEN)
+    const token = user.getSignedJwtToken();
 
     // Send response in JSON
     res.status(statusCode).json({
@@ -33,7 +26,6 @@ const sendTokenResponse = (user, statusCode, res) => {
 
 // Handle user signup request (route POST /signup)
 exports.register = async (req, res) => {
-    // test version
     console.log('Signup attempt received for email:', req.body.email);
     const { fullName, email, password, role } = req.body;
 
@@ -49,30 +41,8 @@ exports.register = async (req, res) => {
     } catch (err) {
         // Response with bad request status & error message
         res.status(400).json({ success: false, error: err.message });
+        res.redirect('/register');
     }
-
-    // origin version
-    // console.log('Signup attempt received for email:', req.body.email);
-    // const { fullName, email, password } = req.body;
-
-    // try {
-    //     // Check if this is the first user
-    //     const userCount = await User.countDocuments({});
-    //     const role = userCount === 0 ? 'Supervisor' : 'Member'; // Assign first user as supervisor
-        
-    //     // Create user
-    //     const user = await User.create({
-    //         fullName,
-    //         email,
-    //         password,
-    //         role
-    //     });
-    //     sendTokenResponse(user, 201, res);
-    // } catch (err) {
-    //     // Response with bad request status & error message
-    //     res.status(400).json({ success: false, error: err.message });
-    //     res.redirect('/register');
-    // }
 };
 
 // Handle user login request (route POST /login)
@@ -100,7 +70,7 @@ exports.login = async (req, res) => {
     } catch (err) {
         console.error(err);//
         res.status(500).json({ success: false, error: 'Server error' }); // 500 Server error
-        //res.redirect('/login');
+        res.redirect('/login');
     }
 };
 
