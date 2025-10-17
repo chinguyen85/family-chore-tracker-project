@@ -2,6 +2,7 @@
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000'
 
+
 if (!BASE_URL) {
     console.error('API URL is not defined. Please check your environment variables.');
 }
@@ -24,13 +25,20 @@ export const signup = async (fullName, email, password) => {
     return handleResponse(response); // Return parsed JSON data
 };
 
+// login
 export const login = async (email, password) => {
-    const response = await fetch(`${BASE_URL}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-    });
-    return handleResponse(response);
+    console.log(' Attempting login to:', `${BASE_URL}/login`); // Debug log
+    try {
+        const response = await fetch(`${BASE_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
+        return handleResponse(response);
+    } catch (error) {
+        console.error('❌ Login fetch error:', error);
+        throw error;
+    }
 };
 
 export const forgotPassword = async (email) => {
