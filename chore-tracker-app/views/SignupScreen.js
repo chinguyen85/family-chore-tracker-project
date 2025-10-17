@@ -3,11 +3,11 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { register } from '../services/app';
-import { AuthContext } from '../components/AuthContext';
+import { AuthContext } from '../components/authContext';
 
 const SignupScreen = () => {
     const navigation = useNavigation();
-    const { signIn } = useContext(AuthContext);
+    const { logIn } = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullName] = useState('');
@@ -18,7 +18,7 @@ const SignupScreen = () => {
             const { token, user } = response;
             
             // 1. Store the token and user data globally
-            await signIn(token, user); 
+            await logIn(token, user); 
             
             // 2. Role-Based Onboarding Logic
             if (user.role === 'supervisor') {

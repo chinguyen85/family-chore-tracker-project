@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 
 import { createFamily } from '../services/app';
-import { AuthContext } from '../components/AuthContext';
+import { AuthContext } from '../components/authContext';
 
 const FamilyCreationScreen = () => {
     const navigation = useNavigation();
