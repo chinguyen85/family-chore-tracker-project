@@ -96,3 +96,16 @@ export const getTaskByUser = async (token) => {
     });
     return handleResponse(response); // return json
 }
+
+// Update task status
+export const updateTaskStatus = async (taskId, status, token) => {
+    const response = await fetch(`${BASE_URL}/tasks/status/${taskId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status })
+    });
+    return handleResponse(response);
+}

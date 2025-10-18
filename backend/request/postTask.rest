@@ -3,9 +3,10 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImlhdCI6MTc2MDczMTEzMywiZXhwIjoxNzYzMzIzMTMzfQ.Is3dIr-ZO0SBl4RhKp7eeQE2789ZsaQG1qSXw3ck_RI
 
 {
-    "title": "baby3 task2",
-    "rewardValue": 5,
-    "dueDate" : "2025-10-15",
+    "title": "baby3 task4",
+    "description": "this is the 4th task",
+    "rewardValue": 3,
+    "dueDate" : "2025-10-20T09:00:00",
     "familyId": "68ee94d40c10de36bffa94da",
     "assignTo": "68f2aa867e6f4ca82a32a1f2"
 }

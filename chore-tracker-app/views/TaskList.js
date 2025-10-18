@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
-import { getTaskByUser } from "../services/app";  
+import { getTaskByUser, updateTaskStatus } from "../services/app";  
 import { AuthContext } from "../components/authContext"; 
 
 export default function TaskList() {
@@ -14,73 +14,111 @@ export default function TaskList() {
         async function fetchTasks() {
             try{
                 const data = await getTaskByUser(token); 
-                console.log('后端返回===========:', data);
+                console.log('后端返回===========:', data);//
                 setTasks(data); // return json array
                 } catch (error) {
                 console.error("get user tasks failed", error);
             }
         }
-        console.log('TaskList页面获得焦点');
-        console.log('当前token:', token);
+        console.log('TaskList页面获得焦点');//
+        console.log('当前token:', token);//
         if (token) fetchTasks();
     }, [token])
   )
   
 
 
-  const renderStars = (count) => (
-    <View style={{ flexDirection: "row" }}>
-      {[...Array(3)].map((_, i) => (
-        <Text
-          key={i}
-          style={{ color: i < count ? "#F7AFA3" : "#ccc", fontSize: 18 }}
-        >
-          ★
-        </Text>
-      ))}
-    </View>
-  );
-
-  const toggleDone = (id) => {
-    setTasks((tasks) =>
-      tasks.map((task) =>
-        task.id === id ? { ...task, done: !task.done, failed: false } : task
-      )
+  const renderStars = (count) => {
+    const validCount = Math.max(0, Math.min(5, count || 0)); // 0-5 range
+    return (
+      <View style={{ flexDirection: "row" }}>
+        {[...Array(validCount)].map((_, i) => (
+          <Text key={i} style={{ color: "#F7AFA3", fontSize: 18 }}>
+            ★
+          </Text>
+        ))}
+      </View>
     );
   };
 
-  const renderTask = ({ item }) => (
-    <TouchableOpacity
-      style={styles.taskBox}
-      onPress={() => toggleDone(item.id)}
-      activeOpacity={0.7}
-    >
-      <View style={styles.checkCol}>
-        {item.failed ? (
-          <Text style={styles.failedBox}>✗</Text>
-        ) : (
-          <Text style={item.done ? styles.checkedBox : styles.uncheckedBox}>
-            {item.done ? "✓" : ""}
+  const toggleDone = async (id) => {
+    try {
+      if (!token) return;
+      
+      // Find current task
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+      
+      // Toggle between For_Approval and Pending
+      const newStatus = task.status === 'For_Approval' ? 'Pending' : 'For_Approval';
+      
+      const updated = await updateTaskStatus(id, newStatus, token);
+      setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status: updated.status } : t)));
+    } catch (error) {
+      console.error('update status failed', error);
+    }
+  };
+
+  const renderTask = ({ item }) => {
+    // Map status to UI states
+    const isChecked = item.status === 'For_Approval' || item.status === 'Completed';
+    const isRejected = item.status === 'Rejected';
+    const isPending = item.status === 'Pending' || !item.status;
+
+    const showDetail = () => {
+      console.log('长按触发，弹窗应该出现');// debug
+      
+      Alert.alert(
+        'Task Details',
+        `Description: ${item.description}\n`,
+        [{ text: 'Close', style: 'cancel' }]
+      );
+    };
+
+    return (
+      <TouchableOpacity
+        style={styles.taskBox}
+        onPress={() => toggleDone(item.id)}
+        onLongPress={showDetail}
+        activeOpacity={0.7}
+      >
+        <View style={styles.checkCol}>
+          {isRejected ? (
+            <Text style={styles.failedBox}>✗</Text>
+          ) : (
+            // <Text style={isChecked ? styles.checkedBox : styles.uncheckedBox}>
+            <Text style={styles.checkedBox}>
+              {isChecked ? "✓" : ""}
+            </Text>
+          )}
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.time, isRejected && styles.failedText]}>
+            {item.dueDate
+              ? new Date(item.dueDate).toLocaleString([], {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+              : ''
+            }
           </Text>
-        )}
-      </View>
-      <View style={{ flex: 1 }}>
-        <Text style={[styles.time, item.failed && styles.failedText]}>
-          {item.time}
-        </Text>
-        <Text
-          style={[
-            styles.taskText,
-            item.done && styles.doneText,
-            item.failed && styles.failedText,
-          ]}
-        >
-          {item.title}
-        </Text>
-      </View>
-      {renderStars(item.stars)}
-    </TouchableOpacity>
-  );
+          <Text
+            style={[
+              styles.taskText,
+              isChecked && styles.doneText,
+              isRejected && styles.failedText,
+            ]}
+          >
+            {item.title} {item.status ? `(${item.status})` : ''}
+          </Text>
+        </View>
+        {renderStars(item.rewardValue || 0)}
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -88,12 +126,9 @@ export default function TaskList() {
       <FlatList
         data={tasks}
         renderItem={renderTask}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         style={{ marginBottom: 20 }}
       />
-      <TouchableOpacity style={styles.doneBtn}>
-        <Text style={styles.doneBtnText}>DONE</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -106,7 +141,7 @@ const styles = StyleSheet.create({
     color: "#F7AFA3",
     marginBottom: 16,
   },
-  taskBox: {
+  taskBox: { //per task
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fafafa",
@@ -116,29 +151,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#eee",
   },
-  checkCol: { width: 32, alignItems: "center", marginRight: 8 },
-  checkedBox: {
-    fontSize: 22,
+  checkCol: { width: 18, alignItems: "center", marginRight: 8 },
+  checkedBox: {  // ✓
+    fontSize: 12,
     color: "#F7AFA3",
     borderWidth: 2,
     borderColor: "#F7AFA3",
-    borderRadius: 6,
-    width: 24,
-    height: 24,
-    textAlign: "center",
-  },
-  uncheckedBox: {
-    fontSize: 22,
-    color: "#ccc",
-    borderWidth: 2,
-    borderColor: "#ccc",
     borderRadius: 6,
     width: 24,
     height: 24,
     textAlign: "center",
   },
   failedBox: {
-    fontSize: 22,
+    fontSize: 12, //x
     color: "#F7AFA3",
     borderWidth: 2,
     borderColor: "#F7AFA3",
@@ -147,8 +172,8 @@ const styles = StyleSheet.create({
     height: 24,
     textAlign: "center",
   },
-  time: { fontSize: 14, color: "#888" },
-  taskText: { fontSize: 18, color: "#333" },
+  time: { fontSize: 10, color: "#888" },
+  taskText: { fontSize: 14, color: "#333" },
   doneText: { textDecorationLine: "line-through", color: "#aaa" },
   failedText: { textDecorationLine: "line-through", color: "#F7AFA3" },
   doneBtn: {
