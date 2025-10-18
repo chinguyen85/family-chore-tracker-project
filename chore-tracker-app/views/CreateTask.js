@@ -24,7 +24,11 @@ const CreateTask = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create Task</Text>
+      <Text style={styles.title}>Supervisor Dashboard</Text>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutText}>Create Task</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Log out</Text>
@@ -40,7 +44,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
   },

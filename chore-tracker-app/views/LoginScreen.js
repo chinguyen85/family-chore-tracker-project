@@ -12,7 +12,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('error', 'miss email or password');
+      Alert.alert('Error', 'Missing email or password');
       return;
     }
 
@@ -25,6 +25,14 @@ const LoginScreen = ({ navigation }) => {
       if (response.success && response.token && response.user) {
         // store token and user data to local
         await logIn(response.token, response.user);
+        // to the user role's page
+        if (response.user.role === 'Supervisor'){
+          navigation.replace ('ParentHome');
+        } else {
+          navigation.replace ('TaskList')
+        }
+
+
         Alert.alert('Success', 'Login Succeed！');
         // after login，AuthContext will switch to MainNavigator
       } else {
@@ -50,7 +58,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Family Chore Tracker</Text>
+      <Text style={styles.title}>Welcome Back</Text>
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Email</Text>
@@ -76,7 +84,16 @@ const LoginScreen = ({ navigation }) => {
           editable={!loading}
         />
       </View>
+      
+      {/* Forgot password link */}
+      <TouchableOpacity style={styles.forgotPasswordLink}
+        onPress={() => navigation.navigate('ForgotPassword')}
+        disabled={loading}
+      >
+        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+      </TouchableOpacity>
 
+      {/* Login button */}
       <TouchableOpacity
         style={[styles.button, loading && styles.buttonDisabled]}
         onPress={handleLogin}
@@ -94,7 +111,7 @@ const LoginScreen = ({ navigation }) => {
         onPress={() => navigation.navigate('Signup')}
         disabled={loading}
       >
-        <Text style={styles.linkText}>Sign up for free</Text>
+        <Text style={styles.linkText}>Don't have an account? Sign up for free</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -169,6 +186,14 @@ const styles = StyleSheet.create({
   },
   debugText: {
     color: '#020202ff',
+    fontSize: 14,
+  },
+  forgotPasswordLink: {
+    alignSelf: 'flex-end',
+    marginBottom: 20,
+  },
+  forgotPasswordText: {
+    color: '#007AFF',
     fontSize: 14,
   },
 });

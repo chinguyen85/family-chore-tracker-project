@@ -3,6 +3,7 @@ import CreateTask from './CreateTask';
 import TaskList from './TaskList';
 import FamilyManagement from './FamilyManagement';
 
+
 const Tab = createBottomTabNavigator();
 
 const MainNavigator = () => {
@@ -27,7 +28,7 @@ const MainNavigator = () => {
         component={CreateTask}
         options={{
           title: 'CreateTask',
-          tabBarLabel: 'Create',
+          tabBarLabel: 'Supervisor',
         }}
       />
       <Tab.Screen
