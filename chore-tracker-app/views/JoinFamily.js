@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     subtitle: {
         fontSize: 16,
         color: '#333',
-        marginBottom: 40,
+        marginBottom: 20,
         textAlign: 'center',
     },
     input: {
@@ -159,9 +159,9 @@ const styles = StyleSheet.create({
     },
     helpText: {
         color: '#007AFF', 
-        fontSize: 14,
+        fontSize: 16,
         textDecorationLine: 'underline',
-        textDecorationColor: '#007AFF'
+        textDecorationColor: '#007AFF',
     }
 });
 

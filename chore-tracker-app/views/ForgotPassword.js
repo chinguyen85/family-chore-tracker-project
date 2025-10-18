@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { forgotPassword } from '../services/app';
@@ -44,8 +44,8 @@ const ForgotPasswordScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Forgot Password</Text>
-            <Text style={styles.subtitle}>Enter your email and new password to reset your account access.</Text>
+            <Text style={styles.title}>Password Reset</Text>
+            <Text style={styles.subtitle}>Enter your email and new password to reset your account access</Text>
 
             <TextInput
                 style={styles.input}
@@ -72,11 +72,16 @@ const ForgotPasswordScreen = () => {
                 secureTextEntry
             />
 
-            <Button 
-                title={loading ? "Processing..." : "Reset Password"} 
+            <TouchableOpacity style={[styles.button, loading && styles.buttonDisabled]} 
                 onPress={handlePasswordReset} 
                 disabled={loading}
-            />
+            >
+                {loading ? (
+                    <ActivityIndicator color="#fff" />
+                ) : (
+                    <Text style={styles.buttonText}>Reset Password</Text>
+                )}
+            </TouchableOpacity>
 
             <TouchableOpacity 
                 style={styles.loginLink} 
@@ -96,15 +101,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 40,
         textAlign: 'center',
+        color: '#333',
     },
     subtitle: {
         fontSize: 16,
-        color: '#666',
-        marginBottom: 30,
+        color: '#333',
+        marginBottom: 20,
         textAlign: 'center',
     },
     input: {
@@ -116,13 +122,28 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         fontSize: 16,
     },
+        button: {
+        backgroundColor: '#007AFF',
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginVertical: 15,
+    },
+    buttonDisabled: {
+        backgroundColor: '#999',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '600',
+    },
     loginLink: {
-        marginTop: 20,
+        marginTop: 30,
         alignSelf: 'center',
     },
     loginText: {
         color: '#007AFF',
-        fontSize: 14,
+        fontSize: 16,
     }
 });
 

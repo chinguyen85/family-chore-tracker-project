@@ -12,7 +12,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('error', 'miss email or password');
+      Alert.alert('Error', 'Missing email or password');
       return;
     }
 
@@ -76,7 +76,16 @@ const LoginScreen = ({ navigation }) => {
           editable={!loading}
         />
       </View>
+      
+      {/* Forgot password link */}
+      <TouchableOpacity style={styles.forgotPasswordLink}
+        onPress={() => navigation.navigate('ForgotPassword')}
+        disabled={loading}
+      >
+        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+      </TouchableOpacity>
 
+      {/* Login button */}
       <TouchableOpacity
         style={[styles.button, loading && styles.buttonDisabled]}
         onPress={handleLogin}
@@ -94,7 +103,7 @@ const LoginScreen = ({ navigation }) => {
         onPress={() => navigation.navigate('Signup')}
         disabled={loading}
       >
-        <Text style={styles.linkText}>Sign up for free</Text>
+        <Text style={styles.linkText}>Don't have an account? Sign up for free</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -169,6 +178,14 @@ const styles = StyleSheet.create({
   },
   debugText: {
     color: '#020202ff',
+    fontSize: 14,
+  },
+  forgotPasswordLink: {
+    alignSelf: 'flex-end',
+    marginBottom: 20,
+  },
+  forgotPasswordText: {
+    color: '#007AFF',
     fontSize: 14,
   },
 });
