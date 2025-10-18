@@ -7,6 +7,7 @@ import SignupScreen from './Screen_Signup';
 import FamilyCreationScreen from './Screen_FamilyCreation'; // New screen for supervisors
 import FamilyJoinScreen from './Screen_FamilyJoin'; // New screen for members
 import ForgotPasswordScreen from './Screen_ForgotPassword';
+import TaskList from './TaskList';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ const AuthNavigator = () => {
             <Stack.Screen name="FamilyCreation" component={FamilyCreationScreen} options={{ title: 'Create Family Group' }} />
                         <Stack.Screen name="FamilyJoin" component={FamilyJoinScreen} options={{ title: 'Join Family Group' }} />
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ title: 'Reset Password' }} />
+            <Stack.Screen name="TaskList" component={TaskList} options={{ headerShown: false, title: 'My Tasks Today' }} />
         </Stack.Navigator>
     );
 };

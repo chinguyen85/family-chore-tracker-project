@@ -12,6 +12,16 @@ const getAllTasks = async (request, response) => {
     } 
 }
 
+// get tasks by user
+const getTaskByUser = async (request, response) => {
+    try {
+        const tasks = await Task.find({ assignTo: request.user.id });
+        response.json(tasks);
+    }  catch (error) {
+        response.status(500).json({ error: error.message });
+    }
+}
+
 // get one task by id
 const getTaskById = async (request, response) => {
     try {
@@ -28,6 +38,9 @@ const getTaskById = async (request, response) => {
         response.status(500).json({ error: error.message })
     }
 }
+
+
+
 
 // post a new task
 const postTask = async (request, response) => {
@@ -149,5 +162,5 @@ const updateTaskStatus = async (request, response) => {
 }
 
 module.exports =  {
-    getAllTasks, getTaskById, postTask, updateTask, deleteTask, updateTaskStatus
+    getAllTasks, getTaskByUser, getTaskById, postTask, updateTask, deleteTask, updateTaskStatus
 } 

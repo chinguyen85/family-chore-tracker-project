@@ -85,3 +85,14 @@ export const getFamilyDetails = async (token) => {
 export const getFamilyMembers = async (token) => {
     return fetchWithAuth('/members', 'GET', token);
 }
+
+export const getTaskByUser = async (token) => {
+    const response = await fetch(`${BASE_URL}/tasks/my`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+    return handleResponse(response); // return json
+}

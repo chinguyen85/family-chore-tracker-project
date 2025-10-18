@@ -5,6 +5,9 @@ tasksRouter.use(protect)
 
 tasksRouter.get('/', tasksController.getAllTasks)
 
+//get one user's all tasks
+tasksRouter.get('/my', tasksController.getTaskByUser);
+
 tasksRouter.get('/:id', tasksController.getTaskById)
 
 tasksRouter.post('/', tasksController.postTask)

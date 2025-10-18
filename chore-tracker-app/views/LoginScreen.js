@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
+      <Text style={styles.title}>Family Chore Tracker</Text>
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Email</Text>

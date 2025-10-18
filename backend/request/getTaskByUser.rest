@@ -1,22 +1,16 @@
-### mama
-GET http://localhost:3000/tasks/
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImlhdCI6MTc2MDczMjU1NSwiZXhwIjoxNzYzMzI0NTU1fQ.P_-xbMEUjbhysBizvUMCDQuKOBzkhBzUUb7YWQwAZSc
-
-
-
-
 ### peppa
-GET http://localhost:3000/tasks/
+GET http://localhost:3000/tasks/my
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NjA2MGMxMGRlMzZiZmZhOTRmMSIsImlhdCI6MTc2MDczMjY0NCwiZXhwIjoxNzYzMzI0NjQ0fQ.7gvrjaTbqs9S21Sts-ZcLs1H8w3kSfgAV17kZoRIZhU
 
+
+
 ### george
-GET http://localhost:3000/tasks/
+GET http://localhost:3000/tasks/my
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWVhMTY2YzUzMDY0YzE0NzgzYmMwNSIsImlhdCI6MTc2MDczMjY5NiwiZXhwIjoxNzYzMzI0Njk2fQ.w6myzi6iEhATccB1M1O4rfUQjCI5IU6Ume-vjCKTgH4
 
 ### baby3
-GET http://localhost:3000/tasks/
+GET http://localhost:3000/tasks/my
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjJhYTg2N2U2ZjRjYTgyYTMyYTFmMiIsImlhdCI6MTc2MDczNDAyMywiZXhwIjoxNzYzMzI2MDIzfQ.ExlPoUGk61CgCylPEnDdMBt9Qssss6YcsQwe-Mkf21c
