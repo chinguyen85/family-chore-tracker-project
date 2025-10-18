@@ -33,6 +33,7 @@ exports.createFamily = async (req, res) => {
             }
         });
     } catch (err) {
+        console.log('Create family error:', err);
         res.status(400).json({ success: false, error: err.message });
     }
 };
@@ -63,6 +64,7 @@ exports.joinFamily = async (req, res) => {
             }
         });
     } catch (err) {
+        console.error('Join family error:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 };
@@ -97,7 +99,7 @@ exports.getFamilyDetails = async (req, res) => {
             data: family
         });
     } catch (err) {
-        console.error('Error fetching family by ID:', err);
+        console.error('Fetching family details error:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 };
@@ -122,6 +124,7 @@ exports.getFamilyMembers = async (req, res) => {
         });
     }
     catch (err) {
+        console.err('Fetching family members error:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 };

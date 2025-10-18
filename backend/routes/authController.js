@@ -29,6 +29,10 @@ exports.register = async (req, res) => {
     console.log('Signup attempt received for email:', req.body.email);
     const { fullName, email, password, role } = req.body;
 
+    if (!role || (role !== 'Supervisor' && role !== 'Member')) {
+        return res.status(400).json({ success: false, error: 'Invalid role selection.'})
+    }
+
     try {
         // Create user
         const user = await User.create({
