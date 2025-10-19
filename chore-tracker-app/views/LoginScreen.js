@@ -82,7 +82,7 @@ const LoginScreen = ({ navigation }) => {
         onPress={() => navigation.navigate('ForgotPassword')}
         disabled={loading}
       >
-        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+        <Text style={styles.forgotPasswordText}>Forgot Password? Click here to reset</Text>
       </TouchableOpacity>
 
       {/* Login button */}
