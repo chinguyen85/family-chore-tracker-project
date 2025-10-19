@@ -34,6 +34,7 @@ import MainNavigator from './views/MainNavigator';
 import TaskList from './views/TaskList';
 import ParentHome from './views/ParentHome';
 import CreateTask from './views/CreateTask';
+import FamilyTaskList from './views/FamilyTaskList';
 
 const Stack = createStackNavigator();
 
@@ -69,13 +70,9 @@ function LogoutButton() {
 function SupervisorStack() {
   return (
     <Stack.Navigator>
-      
       <Stack.Screen name="ParentHome" component={ParentHome} options={{ headerShown: true, title: '', headerRight: () => <LogoutButton /> }} />
-
       <Stack.Screen name="CreateTask" component={CreateTask} options={{ headerShown: true, title: 'Create Task' }} />
-
-      <Stack.Screen name="TaskList" component={TaskList} options={{ headerShown: true, title: 'My Tasks Today' }} />
-
+      <Stack.Screen name="FamilyTaskList" component={FamilyTaskList} options={{ headerShown: true, title: '' }} />
     </Stack.Navigator>
   );
 }

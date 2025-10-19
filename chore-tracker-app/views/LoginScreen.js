@@ -27,9 +27,7 @@ const LoginScreen = ({ navigation }) => {
         await logIn(response.token, response.user);
         // to the user role's page
         if (response.user.role === 'Supervisor'){
-          navigation.replace ('ParentHome');
-        } else {
-          navigation.replace ('TaskList')
+          logIn(response.token, response.user);
         }
 
 

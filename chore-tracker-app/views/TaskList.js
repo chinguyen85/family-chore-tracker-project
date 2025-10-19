@@ -14,14 +14,14 @@ export default function TaskList() {
         async function fetchTasks() {
             try{
                 const data = await getTaskByUser(token); 
-                console.log('后端返回===========:', data);//
+                console.log('backend return===============:', data);// debug
                 setTasks(data); // return json array
                 } catch (error) {
                 console.error("get user tasks failed", error);
             }
         }
-        console.log('TaskList页面获得焦点');//
-        console.log('当前token:', token);//
+        console.log('TaskList got foucus');//
+        console.log('token now:', token);//
         if (token) fetchTasks();
     }, [token])
   )
@@ -86,7 +86,6 @@ export default function TaskList() {
           {isRejected ? (
             <Text style={styles.failedBox}>✗</Text>
           ) : (
-            // <Text style={isChecked ? styles.checkedBox : styles.uncheckedBox}>
             <Text style={styles.checkedBox}>
               {isChecked ? "✓" : ""}
             </Text>
