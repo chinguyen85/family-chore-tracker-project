@@ -1,7 +1,5 @@
 // Helper functions to communicate with Express backend
-
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000'
-
 
 if (!BASE_URL) {
     console.error('API URL is not defined. Please check your environment variables.');
@@ -27,7 +25,7 @@ export const register = async ({ fullName, email, password, role }) => {
 
 // login
 export const login = async (email, password) => {
-    console.log(' Attempting login to:', `${BASE_URL}/login`); // Debug log
+    console.log(' Attempting login to:', `${BASE_URL}/login`);
     try {
         const response = await fetch(`${BASE_URL}/login`, {
             method: 'POST',
@@ -51,7 +49,6 @@ export const forgotPassword = async (email, newPassword) => {
 };
 
 // Call family management endpoints
-// Helper to include auth token in requests
 const fetchWithAuth = async (endpoint, method = 'GET', token, body = null ) => {
     const headers = {
         'Content-Type': 'application/json',
@@ -66,7 +63,7 @@ const fetchWithAuth = async (endpoint, method = 'GET', token, body = null ) => {
     }
     const response = await fetch(`${BASE_URL}/family${endpoint}`, config);
     return handleResponse(response);
-}
+} // Helper to include auth token in requests
 
 export const createFamily = async (familyName, token) => {
     const body = { familyName };
@@ -84,4 +81,22 @@ export const getFamilyDetails = async (token) => {
 
 export const getFamilyMembers = async (token) => {
     return fetchWithAuth('/members', 'GET', token);
+}
+
+// Call proof submit endpoint
+const fetchWithFormAuth = async (endpoint, token, formData) => {
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+    };
+    const config = {
+        method: 'POST',
+        headers,
+        body: formData,
+    };
+    const response = await fetch(`${BASE_URL}/tasks${endpoint}`, config);
+    return handleResponse(response);
+} // Helper to include auth token for Task endpoints request
+
+export const submitProof = async (formData, token) => {
+    return fetchWithFormAuth('/proof', token, formData);
 }
