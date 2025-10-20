@@ -40,7 +40,7 @@ const SignupScreen = () => {
             <Ionicons
                 name={selectedRole === role ? 'radio-button-on' : 'radio-button-off'}
                 size={24}
-                color={selectedRole === role ? '#007AFF' : '#888'}
+                color={selectedRole === role ? '#fa8d7aff' : '#888'}
             />
             <Text style={styles.radioLabel}>{label}</Text>
         </TouchableOpacity>
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     button: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#fa8d7aff',
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     signInText: {
-        color: '#007AFF',
+        color: '#fa8d7aff',
         fontSize: 14,
     }
 });
