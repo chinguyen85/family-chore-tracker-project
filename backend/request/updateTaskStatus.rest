@@ -1,9 +1,9 @@
-PATCH http://localhost:3000/tasks/status/68f004040c080c6588dcc98d
+PATCH http://localhost:3000/tasks/status/68f2ab8a7e6f4ca82a32a209
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImZhbWlseUlkIjoiNjhlZTk0ZDQwYzEwZGUzNmJmZmE5NGRhIiwiaWF0IjoxNzYwNTQ0NzY1fQ.cYz4PlEfW1PiwDKJleQ_lDLadhogK5lLvHQymmItNeM
 
 {
-    "status": "Rejected"
+    "status": "Completed"
 }
 
 

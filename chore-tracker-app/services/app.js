@@ -2,16 +2,18 @@
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000'
 
 if (!BASE_URL) {
-    console.error('API URL is not defined. Please check your environment variables.');
+  console.error(
+    "API URL is not defined. Please check your environment variables."
+  );
 }
 
 const handleResponse = async (response) => {
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.error || 'API request failed');
-    }
-    return data;
-}
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.error || "API request failed");
+  }
+  return data;
+};
 
 // Call authentication endpoints
 export const register = async ({ fullName, email, password, role }) => {
@@ -40,12 +42,12 @@ export const login = async (email, password) => {
 };
 
 export const forgotPassword = async (email, newPassword) => {
-    const response = await fetch(`${BASE_URL}/forgot-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, newPassword }),
-    });
-    return handleResponse(response);
+  const response = await fetch(`${BASE_URL}/forgot-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, newPassword }),
+  });
+  return handleResponse(response);
 };
 
 // Call family management endpoints
@@ -66,22 +68,104 @@ const fetchWithAuth = async (endpoint, method = 'GET', token, body = null ) => {
 } // Helper to include auth token in requests
 
 export const createFamily = async (familyName, token) => {
-    const body = { familyName };
-    return fetchWithAuth('/create', 'POST', token, body);
-}
+  const body = { familyName };
+  return fetchWithAuth("/create", "POST", token, body);
+};
 
 export const joinFamily = async (inviteCode, token) => {
-    const body = { inviteCode };
-    return fetchWithAuth('/join', 'POST', token, body);
-}
+  const body = { inviteCode };
+  return fetchWithAuth("/join", "POST", token, body);
+};
 
 export const getFamilyDetails = async (token) => {
-    return fetchWithAuth('/', 'GET', token);
-}
+  return fetchWithAuth("/", "GET", token);
+};
 
 export const getFamilyMembers = async (token) => {
-    return fetchWithAuth('/members', 'GET', token);
-}
+  return fetchWithAuth("/members", "GET", token);
+};
+
+// create axios
+const api = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Get all family tasks
+export const getAllTasks = async (token) => {
+  try {
+    const response = await api.get("/tasks", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    const status = error.response?.status;
+    const message = error.response?.data?.error || error.message || "Get All Tasks Failed";
+    console.error("Get All Tasks error:", { status, message, url: "/tasks" });
+    throw new Error(message);
+  }
+};
+
+// Get one user's tasks
+export const getTaskByUser = async (token) => {
+  try {
+    const response = await api.get("/tasks/my", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    const status = error.response?.status;
+    const message = error.response?.data?.error || error.message || "Get My Tasks Failed";
+    console.error("Get My Tasks error:", { status, message, url: "/tasks/my" });
+    throw new Error(message);
+  }
+};
+
+// Update task status
+export const updateTaskStatus = async (taskId, status, token) => {
+  try {
+    const response = await api.patch(
+      `/tasks/status/${taskId}`,
+      { status }, // body data
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    const httpStatus = error.response?.status;
+    const message = error.response?.data?.error || error.message || "Update status failed";
+    console.error("Update Task Status error:", { httpStatus, message, url: `/tasks/status/${taskId}`, payload: { status } });
+    throw new Error(message);
+  }
+};
+
+// post a new task
+export const postTask = async (taskData, token) => {
+  try {
+    // Debug outbound payload
+    console.log("POST /tasks payload:", taskData);
+    const response = await api.post("/tasks", taskData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    const status = error.response?.status;
+    const message = error.response?.data?.error || error.message || "Create task failed";
+    console.error("Create task error:", { status, message, url: "/tasks", payload: taskData });
+    throw new Error(message);
+  }
+};
 
 // Call proof submit endpoint
 const fetchWithFormAuth = async (endpoint, token, formData) => {

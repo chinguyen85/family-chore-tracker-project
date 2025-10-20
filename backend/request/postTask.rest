@@ -1,11 +1,12 @@
 POST http://localhost:3000/tasks/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NGU3MGMxMGRlMzZiZmZhOTRkZCIsImZhbWlseUlkIjoiNjhlZThiODMwYzEwZGUzNmJmZmE5NGI3IiwiaWF0IjoxNzYwNDY5NjA3fQ.WQ--dLrNS0RuNXb4sui7C5DPdJ11adc1QjE5l2MEgdw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImlhdCI6MTc2MDczMTEzMywiZXhwIjoxNzYzMzIzMTMzfQ.Is3dIr-ZO0SBl4RhKp7eeQE2789ZsaQG1qSXw3ck_RI
 
 {
-    "title": "task 0",
-    "rewardValue": 5,
-    "dueDate" : "2025-10-15",
-    "familyId": "68ee8b830c10de36bffa94b7",
-    "assignTo": "68ee96060c10de36bffa94f1"
+    "title": "baby3 task4",
+    "description": "this is the 4th task",
+    "rewardValue": 3,
+    "dueDate" : "2025-10-20T09:00:00",
+    "familyId": "68ee94d40c10de36bffa94da",
+    "assignTo": "68f2aa867e6f4ca82a32a1f2"
 }

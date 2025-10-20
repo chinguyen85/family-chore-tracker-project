@@ -1,7 +1,4 @@
 GET http://localhost:3000/family/members
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImZhbWlseUlkIjoiNjhlZTk0ZDQwYzEwZGUzNmJmZmE5NGRhIiwiaWF0IjoxNzYwNDY2NTI1fQ.O6fLJweTqOTtXrXVpUK_btyQNYlF3iFPSNE-Bpn87aA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImlhdCI6MTc2MDczMjU1NSwiZXhwIjoxNzYzMzI0NTU1fQ.P_-xbMEUjbhysBizvUMCDQuKOBzkhBzUUb7YWQwAZSc
 
-{
-    "familyId": "68ee94d40c10de36bffa94da"
-}

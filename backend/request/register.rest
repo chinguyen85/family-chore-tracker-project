@@ -33,3 +33,17 @@ Content-Type: application/json
     "role": "Member",
     "familyId": "68ee94d40c10de36bffa94da"
 }
+
+
+### baby3
+
+POST http://localhost:3000/signup
+Content-Type: application/json
+
+{
+    "email": "testBabyy3@abc.com", 
+    "password": "password",
+    "fullName": "baby3",
+    "role": "Member",
+    "familyId": "68ee94d40c10de36bffa94da"
+}

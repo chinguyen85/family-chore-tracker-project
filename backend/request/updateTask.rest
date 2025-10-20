@@ -1,6 +1,6 @@
 PUT http://localhost:3000/tasks/68eea273c53064c14783bc17
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImZhbWlseUlkIjoiNjhlZTk0ZDQwYzEwZGUzNmJmZmE5NGRhIiwiaWF0IjoxNzYwNTQ0NzY1fQ.cYz4PlEfW1PiwDKJleQ_lDLadhogK5lLvHQymmItNeM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZWU5NDhiMGMxMGRlMzZiZmZhOTRkNyIsImlhdCI6MTc2MDczMTEzMywiZXhwIjoxNzYzMzIzMTMzfQ.Is3dIr-ZO0SBl4RhKp7eeQE2789ZsaQG1qSXw3ck_RI
 
 {
     "title": "up2",
