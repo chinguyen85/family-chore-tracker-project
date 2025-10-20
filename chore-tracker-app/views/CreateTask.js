@@ -12,7 +12,7 @@ const CreateTask = ({ navigation }) => {
   const [description, setDescription] = useState('');
   const [rewardValue, setRewardValue] = useState(0);
   // stroe different tasks
-  const [selectedTasks, setSelectedTasks] = useState([]); 
+  const [selectedMemberIds, setSelectedMemberIds] = useState([]); 
   const [dueDate, setDueDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [familyMembers, setFamilyMembers] = useState([]);
@@ -32,32 +32,19 @@ const CreateTask = ({ navigation }) => {
     if (token) fetchMembers();
   }, [token]);
 
-  const buildTaskObject = (memberId) => {
-    return {
-      title: title.trim(),
-      description: description.trim(),
-      rewardValue: rewardValue,
-      dueDate: dueDate.toISOString(),
-      assignTo: memberId // only one person here, but in array
-    };
-  };
+ 
 
   const handleStarPress = (value) => { //press 3 stars
     setRewardValue(value);  //rewardValue = 3;
   };
 
-  // checkbox: if it already has task, remove it; if not, add new task;
+  // checkbox: if it already has memberId, remove it; if not, add;
   const toggleMemberSelection = (memberId) => {
-    setSelectedTasks((prev) => {
-      const existingTask = prev.find(task => task.assignTo === memberId);
-
-      if (existingTask){
-        return prev.filter(task => task.assignTo !== memberId);
-      } else {
-        const newTask = buildTaskObject(memberId);
-        return [...prev, newTask];
-      }
-    });
+    setSelectedMemberIds((prev) =>
+      prev.includes(memberId)
+        ? prev.filter(id => id !== memberId)
+        : [...prev, memberId]
+    );
   };
 
   const toggleDatePicker = () => {
@@ -82,19 +69,26 @@ const CreateTask = ({ navigation }) => {
       Alert.alert('Error', 'Please select a reward value');
       return;
     }
-    if (selectedTasks.length === 0) {
+    if (selectedMemberIds.length === 0) {
       Alert.alert('Error', 'Please assign the task to at least one member');
       return;
     }
 
     try {
-      //for loop every task in task array, post one by one
-      for (const taskObj of selectedTasks) {
-        await postTask(taskObj, token);
-      }
+      //for loop every memberId in member array, post one by one
+      for (const memberId of selectedMemberIds) {
+      const taskObj = {
+        title: title.trim(),
+        description: description.trim(),
+        rewardValue: rewardValue,
+        dueDate: dueDate.toISOString(),
+        assignTo: memberId
+      };
+      await postTask(taskObj, token);
+    }
 
       Alert.alert('Success', 'Task created successfully!', [
-        { text: 'OK', onPress: () => navigation.goBack() }
+        { text: 'OK', onPress: () => navigation.goBack() } // if success, go back to dashboard
       ]);
     } catch (error) {
       Alert.alert('Error', error.message || 'Failed to create task');
@@ -123,7 +117,7 @@ const CreateTask = ({ navigation }) => {
           value={description}
           onChangeText={setDescription}
           multiline
-          numberOfLines={6}
+          numberOfLines={5}
         />
 
         {/* Assign To - Checkbox List */}
@@ -131,8 +125,8 @@ const CreateTask = ({ navigation }) => {
           <Text style={styles.assignLabel}>Assign To</Text>
           {familyMembers.map((member) => {
 
-            {/* check if selectedTasks has the user's task */}
-           const isSelected = selectedTasks.some(task => task.assignTo === member.id);
+            {/* check if selectedMemberIds has the user's id */}
+           const isSelected = selectedMemberIds.includes(member.id);
             return (
               <TouchableOpacity
                 key={member.id}
@@ -140,7 +134,7 @@ const CreateTask = ({ navigation }) => {
                 onPress={() => toggleMemberSelection(member.id)}
               >
                 <View style={styles.checkbox}>
-                  {isSelected && <Text style={styles.checkmark}>✓</Text>}
+                  {isSelected && <Text style={styles.checkmark}>✓</Text>} 
                 </View>
                 <Text style={styles.memberName}>{member.fullName}</Text>
               </TouchableOpacity>
