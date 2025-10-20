@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,54 +6,56 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  Modal,
 } from "react-native";
 import { AuthContext } from "../components/authContext";
-import { getAllTasks, updateTaskStatus } from "../services/app";
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { getAllTasks } from "../services/app";
 
 const FamilyTaskList = () => {
   const [tasks, setTasks] = useState([]);
   const { state } = useContext(AuthContext);
   const token = state.userToken;
+  const navigation = useNavigation();
 
-  // Modal for pass or reject a task
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
+  // No modal; long-press will show a simple Alert with details
 
-  const handleLongPress = (task) => {
-    setSelectedTask(task);
-    setModalVisible(true);
-  }
-
-  useEffect(() => {
-    async function fetchTasks() {
-      try {
-        const data = await getAllTasks(token);
-        setTasks(data);
-      } catch (error) {
-        console.error("get family tasks failed", error);
+  // Fetch on focus so returning from TaskReview refreshes the list
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      async function fetchTasks() {
+        try {
+          const data = await getAllTasks(token);
+          if (isActive) setTasks(data);
+        } catch (error) {
+          console.error("get family tasks failed", error);
+        }
       }
-    }
-    if (token) fetchTasks();
-  }, [token]);
+      if (token) fetchTasks();
+      return () => { isActive = false; };
+    }, [token])
+  );
 
-  const handleStatusChange = async (status) => {
-    try {
-      await updateTaskStatus(selectedTask.id, status, token);
-      setModalVisible(false);
-      // get all tasks again
-      const data = await getAllTasks(token);
-      setTasks(data);
-    } catch (error) {
-      Alert.alert('error', error.message || 'update task status failed');
-    }
-  };
+  // No status change in this view; handled elsewhere if needed
 
   const renderTask = ({ item }) => {
+    const showDetail = () => {
+      Alert.alert(
+              'Task Details',
+              `${item.description}\n`,
+              [{ text: 'Close', style: 'cancel' }]
+            );
+    };
+
+    const goToReview = () => {
+      navigation.navigate('TaskReview', { task: item });
+    };
+
     return (
       <TouchableOpacity
         style={styles.taskBox}
-        onLongPress={() => handleLongPress(item)}
+        onPress={goToReview}
+        onLongPress={showDetail}
         activeOpacity={0.7}
       >
         <View style={{ flex: 1 }}>
@@ -92,35 +94,6 @@ const FamilyTaskList = () => {
         renderItem={renderTask}
         keyExtractor={(item) => item.id}
       />
-      <Modal visible={modalVisible} transparent>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
-            {selectedTask && (
-              <>
-                <Text style={styles.modalTitle}>Task Details</Text>
-                <Text style={styles.modalDesc}>{selectedTask.description}</Text>
-                {selectedTask.proofImage && (
-                  <Text style={styles.modalDesc}>Image{selectedTask.proofImage}</Text>
-                )}
-                {selectedTask.proofNotes && (
-                  <Text style={styles.modalDesc}>Note: {selectedTask.proofNotes}</Text>
-                )}
-                <View style={styles.modalButtonRow}>
-                  <TouchableOpacity onPress={() => handleStatusChange('Completed')} style={styles.modalButton}>
-                    <Text style={styles.modalButtonText}>Complete</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => handleStatusChange('Rejected')} style={styles.modalButton}>
-                    <Text style={styles.modalButtonText}>Reject</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalButton}>
-                    <Text style={styles.modalButtonText}>Cancel</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            )}
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -146,41 +119,6 @@ const styles = StyleSheet.create({
   time: { fontSize: 10, color: "#888" },
   taskText: { fontSize: 14, color: "#333" },
   desc: { fontSize: 14, color: "#666", marginBottom: 4 },
-  // new modal 
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#00000099', // for cover
-  },
-  modalBox: {
-    backgroundColor: "#eee",
-    padding: 20,
-    width: '80%',
-  },
-  modalTitle: {
-    color: "#2c2c2cff",
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  modalDesc: {
-    color: "#666",
-    marginBottom: 8,
-  },
-  modalButton: {
-    backgroundColor: '#f9ab9eff',
-    padding: 5,
-    marginBottom: 8,
-  },
-  modalButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalButtonRow: {
-    marginTop: 20,
-  },
 });
 
 export default FamilyTaskList;
