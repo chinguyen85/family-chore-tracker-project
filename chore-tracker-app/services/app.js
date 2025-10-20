@@ -106,7 +106,10 @@ export const getAllTasks = async (token) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Get All Tasks Failed");
+    const status = error.response?.status;
+    const message = error.response?.data?.error || error.message || "Get All Tasks Failed";
+    console.error("Get All Tasks error:", { status, message, url: "/tasks" });
+    throw new Error(message);
   }
 };
 
@@ -120,7 +123,10 @@ export const getTaskByUser = async (token) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Get My Tasks Failed");
+    const status = error.response?.status;
+    const message = error.response?.data?.error || error.message || "Get My Tasks Failed";
+    console.error("Get My Tasks error:", { status, message, url: "/tasks/my" });
+    throw new Error(message);
   }
 };
 
@@ -138,13 +144,18 @@ export const updateTaskStatus = async (taskId, status, token) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Update status failed");
+    const httpStatus = error.response?.status;
+    const message = error.response?.data?.error || error.message || "Update status failed";
+    console.error("Update Task Status error:", { httpStatus, message, url: `/tasks/status/${taskId}`, payload: { status } });
+    throw new Error(message);
   }
 };
 
 // post a new task
 export const postTask = async (taskData, token) => {
   try {
+    // Debug outbound payload
+    console.log("POST /tasks payload:", taskData);
     const response = await api.post("/tasks", taskData, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -152,6 +163,9 @@ export const postTask = async (taskData, token) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Create task failed");
+    const status = error.response?.status;
+    const message = error.response?.data?.error || error.message || "Create task failed";
+    console.error("Create task error:", { status, message, url: "/tasks", payload: taskData });
+    throw new Error(message);
   }
 };

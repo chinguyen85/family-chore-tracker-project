@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 20,
   },
-  label: {
+  label: { //email/ password
     fontSize: 16,
     marginBottom: 8,
     color: '#333',
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#F7AFA3',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    color: '#007AFF',
+    color: '#F7AFA3',
     fontSize: 16,
   },
   debugButton: {
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   forgotPasswordText: {
-    color: '#007AFF',
+    color: '#F7AFA3',
     fontSize: 14,
   },
 });

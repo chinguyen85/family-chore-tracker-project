@@ -29,10 +29,9 @@ export default function TaskList() {
 
 
   const renderStars = (count) => {
-    const validCount = Math.max(0, Math.min(5, count || 0)); // 0-5 range
     return (
       <View style={{ flexDirection: "row" }}>
-        {[...Array(validCount)].map((_, i) => (
+        {[...Array(count)].map((_, i) => (
           <Text key={i} style={{ color: "#F7AFA3", fontSize: 18 }}>
             ★
           </Text>

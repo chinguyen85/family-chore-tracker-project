@@ -44,30 +44,51 @@ const getTaskById = async (request, response) => {
 
 // post a new task
 const postTask = async (request, response) => {
-    if(!request.body 
-        || !request.body.title 
-        || !request.body.rewardValue
-        || !request.body.dueDate
-        || !request.user.familyId//
-        || !request.body.assignTo)
-        return response.status(400).end()
+    // 
+    if (!request.body) {
+        return response.status(400).json({ error: 'Request body is required' })
+    }
+
+    const { title, description, rewardValue, dueDate, assignTo, notificationTime } = request.body
+
+    if (!title) {
+        return response.status(400).json({ error: 'Title is required' })
+    }
+    if (rewardValue === undefined || rewardValue === null) {
+        return response.status(400).json({ error: 'Reward value is required' })
+    }
+    if (typeof rewardValue !== 'number' || rewardValue < 0 || rewardValue > 5) {
+        return response.status(400).json({ error: 'Reward value must be a number between 0 and 5' })
+    }
+    if (!dueDate) {
+        return response.status(400).json({ error: 'Due date is required' })
+    }
+    if (!request.user || !request.user.familyId) {
+        return response.status(400).json({ error: 'Family context is missing' })
+    }
+    if (!assignTo) {
+        return response.status(400).json({ error: 'assignTo is required' })
+    }
+
+    // Normalize assignTo: schema expects an array, accept string and wrap
+    const normalizedAssignTo = Array.isArray(assignTo) ? assignTo : [assignTo]
 
     try {
         const newTask = new Task({
-            title: request.body.title,
-            description: request.body.description || '', 
-            rewardValue: request.body.rewardValue,
-            dueDate: request.body.dueDate,
-            familyId: request.user.familyId, // get from auth
-            assignTo: request.body.assignTo,
-            notificationTime: request.body.notificationTime, 
+            title,
+            description: description || '',
+            rewardValue,
+            dueDate,
+            familyId: request.user.familyId, // from auth
+            assignTo: normalizedAssignTo,
+            notificationTime,
             status: 'Pending'
         })
 
         const savedTask = await newTask.save()
-        response.status(201).json(savedTask)
+        return response.status(201).json(savedTask)
     } catch (error) {
-        response.status(400).json({error: error.message})
+        return response.status(400).json({ error: error.message })
     }
 }
 

@@ -29,7 +29,6 @@ import { TouchableOpacity, Text, Alert } from 'react-native';
 import { AuthProvider, AuthContext } from './components/authContext';
 
 import AuthNavigator from './views/AuthNavigator';
-import MainNavigator from './views/MainNavigator';
 
 import TaskList from './views/TaskList';
 import ParentHome from './views/ParentHome';
