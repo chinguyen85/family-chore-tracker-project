@@ -13,6 +13,7 @@ import FamilyTaskList from './views/ViewTask';
 import FamilyCreationScreen from './views/CreateFamily';
 import FamilyJoinScreen from './views/JoinFamily';
 import ProofUploadScreen from './views/ProofUpload';
+import TaskReview from './views/TaskReview';
 
 const Stack = createStackNavigator();
 
@@ -50,7 +51,8 @@ function SupervisorStack() {
     <Stack.Navigator>
       <Stack.Screen name="ParentHome" component={ParentHome} options={{ headerShown: true, title: 'Supervisor Dashboard', headerRight: () => <LogoutButton /> }} />
       <Stack.Screen name="CreateTask" component={CreateTask} options={{ headerShown: true, title: 'Create Task' }} />
-      <Stack.Screen name="FamilyTaskList" component={FamilyTaskList} options={{ headerShown: true, title: 'View All Tasks' }} />
+      <Stack.Screen name="FamilyTaskList" component={FamilyTaskList} options={{ headerShown: true, title: '' }} />
+      <Stack.Screen name="TaskReview" component={TaskReview} options={{ headerShown: true, title: '', headerRight: () => <LogoutButton /> }} />
     </Stack.Navigator>
   );
 }
