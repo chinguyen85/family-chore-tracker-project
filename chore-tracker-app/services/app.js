@@ -1,7 +1,5 @@
 // Helper functions to communicate with Express backend
-import axios from "axios";
-
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:3000";
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000'
 
 if (!BASE_URL) {
   console.error(
@@ -18,29 +16,29 @@ const handleResponse = async (response) => {
 };
 
 // Call authentication endpoints
-export const signup = async (fullName, email, password) => {
-  const response = await fetch(`${BASE_URL}/signup`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fullName, email, password }),
-  });
-  return handleResponse(response); // Return parsed JSON data
+export const register = async ({ fullName, email, password, role }) => {
+    const response = await fetch(`${BASE_URL}/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName, email, password, role }),
+    });
+    return handleResponse(response); // Return parsed JSON data
 };
 
 // login
 export const login = async (email, password) => {
-  console.log(" Attempting login to:", `${BASE_URL}/login`); // Debug log
-  try {
-    const response = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    return handleResponse(response);
-  } catch (error) {
-    console.error("Login fetch error:", error);
-    throw error;
-  }
+    console.log(' Attempting login to:', `${BASE_URL}/login`);
+    try {
+        const response = await fetch(`${BASE_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
+        return handleResponse(response);
+    } catch (error) {
+        console.error('Login fetch error:', error);
+        throw error;
+    }
 };
 
 export const forgotPassword = async (email, newPassword) => {
@@ -53,22 +51,21 @@ export const forgotPassword = async (email, newPassword) => {
 };
 
 // Call family management endpoints
-// Helper to include auth token in requests
-const fetchWithAuth = async (endpoint, method = "GET", token, body = null) => {
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
-  const config = {
-    method,
-    headers,
-  };
-  if (body) {
-    config.body = JSON.stringify(body);
-  }
-  const response = await fetch(`${BASE_URL}/family${endpoint}`, config);
-  return handleResponse(response);
-};
+const fetchWithAuth = async (endpoint, method = 'GET', token, body = null ) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+    };
+    const config = {
+        method,
+        headers,
+    };
+    if (body) {
+        config.body = JSON.stringify(body);
+    }
+    const response = await fetch(`${BASE_URL}/family${endpoint}`, config);
+    return handleResponse(response);
+} // Helper to include auth token in requests
 
 export const createFamily = async (familyName, token) => {
   const body = { familyName };
@@ -169,3 +166,21 @@ export const postTask = async (taskData, token) => {
     throw new Error(message);
   }
 };
+
+// Call proof submit endpoint
+const fetchWithFormAuth = async (endpoint, token, formData) => {
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+    };
+    const config = {
+        method: 'POST',
+        headers,
+        body: formData,
+    };
+    const response = await fetch(`${BASE_URL}/tasks${endpoint}`, config);
+    return handleResponse(response);
+} // Helper to include auth token for Task endpoints request
+
+export const submitProof = async (formData, token) => {
+    return fetchWithFormAuth('/proof', token, formData);
+}

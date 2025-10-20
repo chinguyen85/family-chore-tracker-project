@@ -39,9 +39,6 @@ const getTaskById = async (request, response) => {
     }
 }
 
-
-
-
 // post a new task
 const postTask = async (request, response) => {
     // 
@@ -182,6 +179,45 @@ const updateTaskStatus = async (request, response) => {
     }
 }
 
+// Proof submission (route POST /tasks/proof)
+const submitProof = async (request, response) => {
+    // Multer attaches file details to req.file if successful
+    const proofImagePath = request.file ? request.file.path : null;
+    const { taskId, notes } = request.body;
+    const userId = request.user.id;
+
+    if (!proofImagePath) {
+        return response.status(400).json({ success: false, error: 'Proof image is required.' });
+    }
+
+    try {
+        // Find the task and ensure it belongs to the user
+        const task = await Task.findOne({ _id: taskId, assignedTo: userId });
+        if (!task) {
+            return response.status(400).json({ success: false, error:'Task not found or not assign to you.'});
+        }
+
+        // Update task details (Change status, save file path to database, add notes, record completion time)
+        task.status = 'For_Approval';
+        task.proofImage = proofImagePath;
+        task.proofNotes = notes;
+        task.completedAt = Date.now();
+
+        await task.save();
+        response.status(200).json({
+            success: true,
+            data: {
+                status: task.status,
+                proofPath: proofImagePath,
+                message: `Successfully submitted proof for ${taskId}.`
+            }
+        });
+    } catch (error) {
+        console.error('Error submitting task proof:', error);
+        response.status(500).json({ success: false, error: error.message });
+    }
+}
+
 module.exports =  {
-    getAllTasks, getTaskByUser, getTaskById, postTask, updateTask, deleteTask, updateTaskStatus
-} 
+    getAllTasks, getTaskByUser, getTaskById, postTask, updateTask, deleteTask, updateTaskStatus, submitProof
+}

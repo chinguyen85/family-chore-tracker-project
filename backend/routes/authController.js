@@ -29,6 +29,10 @@ exports.register = async (req, res) => {
     console.log('Signup attempt received for email:', req.body.email);
     const { fullName, email, password, role } = req.body;
 
+    if (!role || (role !== 'Supervisor' && role !== 'Member')) {
+        return res.status(400).json({ success: false, error: 'Invalid role selection.'})
+    }
+
     try {
         // Create user
         const user = await User.create({
@@ -37,11 +41,14 @@ exports.register = async (req, res) => {
             password,
             role
         });
-        sendTokenResponse(user, 201, res);
+        return sendTokenResponse(user, 201, res);
     } catch (err) {
+        console.error('Registration error:', err.message);
+        if (err.code == 11000) {
+            return res.status(400).json({ success: false, error: 'This email is already registerd.' });
+        }
         // Response with bad request status & error message
         res.status(400).json({ success: false, error: err.message });
-        res.redirect('/register');
     }
 };
 
@@ -68,9 +75,8 @@ exports.login = async (req, res) => {
         }
         sendTokenResponse(user, 200, res);
     } catch (err) {
-        console.error(err);//
+        console.error(err);
         res.status(500).json({ success: false, error: 'Server error' }); // 500 Server error
-        res.redirect('/login');
     }
 };
 
@@ -95,6 +101,5 @@ exports.forgotPassword = async (req, res) => {
         res.status(200).json({ success: true, data: 'Password updated successfully. Please log in with new password.' });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
-        res.redirect('/forgot-password');
     }
 };

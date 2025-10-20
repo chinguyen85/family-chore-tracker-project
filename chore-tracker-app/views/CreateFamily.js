@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 
 import { createFamily } from '../services/app';
@@ -25,13 +25,9 @@ const FamilyCreationScreen = () => {
                 `Your invite code is: ${data.inviteCode}\nShare this with family members to let them join.`,
                 [{
                     text: 'Continue to App',
-                    // Reset navigation stack to prevent returning to signup screens
-                    onPress: () => navigation.dispatch(
-                        CommonActions.reset({
-                            index: 0,
-                            routes: [{ name: 'AppStack' }],
-                        })
-                    ),
+                    onPress: () => {
+                        // Do nothing here because the App root component handle to render MainNavigator already
+                        },
                 }]
             );
         } catch (error) {
@@ -42,18 +38,20 @@ const FamilyCreationScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Welcome, Supervisor!</Text>
-            <Text style={styles.label}>To begin, create your family group name:</Text>
+            <Text style={styles.subtitle}>To begin, create your family group name</Text>
             <TextInput
                 style={styles.input}
                 placeholder="The Smith Family"
                 value={familyName}
                 onChangeText={setFamilyName}
             />
-            <Button
-                title="Create Group"
+            <TouchableOpacity style={[styles.button, (!familyName ? styles.buttonDisabled : null)]}
                 onPress={handleCreateFamily}
                 disabled={!familyName}
-            />
+                activeOpacity={0.8}
+            >
+                <Text style={styles.buttonText}>Create Group</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -61,24 +59,47 @@ const FamilyCreationScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 30,
+        backgroundColor: '#f9f9f9',
         justifyContent: 'center',
-        padding: 20
     },
     title: {
-        fontSize: 24,
-        marginBottom: 20,
-        textAlign: 'center'
+        fontSize: 28,
+        fontWeight: 'bold',
+        marginBottom: 40,
+        textAlign: 'center',
+        color: '#333',
     },
-    label: {
-        marginBottom: 10,
-        textAlign: 'center'
+    subtitle: {
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 20,
+        textAlign: 'center',
     },
     input: {
         height: 40,
-        borderColor: 'gray',
+        borderColor: '#ddd',
         borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 10
+        borderRadius: 8,
+        paddingHorizontal: 20,
+        marginBottom: 20,
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    button: {
+        backgroundColor: '#007AFF',
+        padding: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginVertical: 15,
+    },
+    buttonDisabled: {
+        backgroundColor: '#999',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '600',
     },
 });
 
