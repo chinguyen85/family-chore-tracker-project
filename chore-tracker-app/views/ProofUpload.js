@@ -22,59 +22,60 @@ const ProofUploadScreen = () => {
     const handleImagePick = async (source) => {
         let permission;
         
-        if (source === 'camera') {
-            // Get current camera permission status
-            permission = await ImagePicker.getCameraPermissionsAsync();
-            if (permission.status !== 'granted') {
-                // Request camera permission if not granted
-                permission = await ImagePicker.requestCameraPermissionsAsync();
+        try {
+            console.log(`Attempting to open ${source}...`);
+            if (source === 'camera') {
+                // Get current camera permission status
+                permission = await ImagePicker.getCameraPermissionsAsync();
+
+                if (permission.status !== 'granted') {
+                    // Request camera permission if not granted
+                    permission = await ImagePicker.requestCameraPermissionsAsync();
+                }
+                if (permission.status !== 'granted') {
+                    Alert.alert('Permission Denied', 'Camera access is required to take a photo.');
+                    return;
+                }
+
+                console.log('Launching Camera...');
+                let result = await ImagePicker.launchCameraAsync({
+                    mediaTypes: ['images'],
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 0.6,
+                });
+                if (!result.canceled && result.assets && result.assets.length > 0) {
+                    setImageUri(result.assets[0].uri); // Set imageUri when the cancellation is false and the new assets array contains data.
+                } else {
+                    console.log('Camera operation cancelled or failed:', JSON.stringify(result, null, 2));
+                }
+            } else if (source === 'gallery') {
+                permission = await ImagePicker.getMediaLibraryPermissionsAsync();
+
+                if (permission.status !== 'granted') {
+                    permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                }
+                if (permission.status !== 'granted') {
+                    Alert.alert('Permission Denied', 'Gallery access is required to pick a photo.');
+                    return;
+                }
+                
+                console.log('Launching Image Library...');
+                let result = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ['images'],
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 0.6,
+                });
+                if (!result.canceled && result.assets && result.assets.length > 0) {
+                    setImageUri(result.assets[0].uri);
+                } else {
+                    console.log('Gallery operation cancelled or failed:', JSON.stringify(result, null, 2));
+                }
             }
-
-            if (permission.status !== 'granted') {
-                Alert.alert('Permission Denied', 'Camera access is required to take a photo.');
-                return;
-            }
-
-            console.log('Launching Camera...');
-            let result = await ImagePicker.launchCameraAsync({
-                mediaTypes: [ImagePicker.MediaType.Images],
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 0.6,
-            });
-
-            if (!result.canceled && result.assets && result.assets.length > 0) {
-                setImageUri(result.assets[0].uri);
-            } else {
-                console.log('Camera operation cancelled or failed.');
-            }
-
-        } else if (source === 'gallery') {
-            // Get current media library permission status
-            permission = await ImagePicker.getMediaLibraryPermissionsAsync();
-            if (permission.status !== 'granted') {
-                // Request media library permission if not granted
-                permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            }
-
-            if (permission.status !== 'granted') {
-                Alert.alert('Permission Denied', 'Gallery access is required to pick a photo.');
-                return;
-            }
-
-            console.log('Launching Image Library...');
-            let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: [ImagePicker.MediaType.Images],
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 0.6,
-            });
-
-            if (!result.canceled && result.assets && result.assets.length > 0) {
-                setImageUri(result.assets[0].uri);
-            } else {
-                console.log('Gallery operation cancelled or failed.');
-            }
+        } catch (error) {
+            console.error(`${source} error:`, error);
+            Alert.alert('Error', `Failed to open ${source}: ${error.message}`);
         }
     };
     
@@ -101,6 +102,7 @@ const ProofUploadScreen = () => {
         // Append other fields
         formData.append('notes', notes);
         formData.append('taskId', taskId);
+        console.log('FormData contents:', { taskId, notes, imageUri });
 
         try {
             console.log('Submitting proof to backend...');
@@ -301,7 +303,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     button: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#fa8d7aff',
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',

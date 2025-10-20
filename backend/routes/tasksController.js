@@ -185,6 +185,9 @@ const submitProof = async (request, response) => {
     const proofImagePath = request.file ? request.file.path : null;
     const { taskId, notes } = request.body;
     const userId = request.user.id;
+    console.log('submitProof - userId:', userId, 'taskId:', taskId, 'notes:', notes);
+    
+    const task = await Task.findOne({ _id: taskId, assignTo: userId });
 
     if (!proofImagePath) {
         return response.status(400).json({ success: false, error: 'Proof image is required.' });
@@ -192,7 +195,7 @@ const submitProof = async (request, response) => {
 
     try {
         // Find the task and ensure it belongs to the user
-        const task = await Task.findOne({ _id: taskId, assignedTo: userId });
+        const task = await Task.findOne({ _id: taskId, assignTo: userId });
         if (!task) {
             return response.status(400).json({ success: false, error:'Task not found or not assign to you.'});
         }
