@@ -6,13 +6,13 @@ import { TouchableOpacity, Text, Alert } from 'react-native';
 
 import { AuthProvider, AuthContext } from './components/authContext';
 import AuthNavigator from './views/AuthNavigator';
-import MainNavigator from './views/MainNavigator';
 import TaskList from './views/TaskList';
-import ParentHome from './views/ParentHome';
+import ParentHome from './views/SupervisorDashboard';
 import CreateTask from './views/CreateTask';
-import FamilyTaskList from './views/FamilyTaskList';
+import FamilyTaskList from './views/ViewTask';
 import FamilyCreationScreen from './views/CreateFamily';
 import FamilyJoinScreen from './views/JoinFamily';
+import ProofUploadScreen from './views/ProofUpload';
 
 const Stack = createStackNavigator();
 
@@ -48,9 +48,9 @@ function LogoutButton() {
 function SupervisorStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ParentHome" component={ParentHome} options={{ headerShown: true, title: '', headerRight: () => <LogoutButton /> }} />
+      <Stack.Screen name="ParentHome" component={ParentHome} options={{ headerShown: true, title: 'Supervisor Dashboard', headerRight: () => <LogoutButton /> }} />
       <Stack.Screen name="CreateTask" component={CreateTask} options={{ headerShown: true, title: 'Create Task' }} />
-      <Stack.Screen name="FamilyTaskList" component={FamilyTaskList} options={{ headerShown: true, title: '' }} />
+      <Stack.Screen name="FamilyTaskList" component={FamilyTaskList} options={{ headerShown: true, title: 'View All Tasks' }} />
     </Stack.Navigator>
   );
 }
@@ -59,11 +59,24 @@ function SupervisorStack() {
 function MemberStack() {
   return (
     <Stack.Navigator>
-
-      <Stack.Screen name="TaskList" component={TaskList} options={{ headerShown: true, title: '', headerRight: () => <LogoutButton /> }} />
-
+      <Stack.Screen name="TaskList" component={TaskList} options={{ headerShown: true, title: 'Member Task List', headerRight: () => <LogoutButton /> }} />
+      <Stack.Screen name="ProofUpload" component={ProofUploadScreen} options={{ headerShown: true, title: 'Upload Proof', headerRight: () => <LogoutButton /> }} />
     </Stack.Navigator>
   );
+}
+
+// Onboarding Stack
+function OnboardingStack() {
+  const { state } = useContext(AuthContext);
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {state.user?.role === 'Supervisor' ? (
+        <Stack.Screen name="CreateFamily" component={FamilyCreationScreen} />
+      ) : (
+        <Stack.Screen name="JoinFamily" component={FamilyJoinScreen} />
+      )}
+    </Stack.Navigator>
+  )
 }
 
 function AppContent() {
@@ -80,11 +93,7 @@ function AppContent() {
         <AuthNavigator /> // Show AuthNavigator if users not login yet
       ) : (
         !state.user.familyId ? (
-          state.user.role === 'Supervisor' ? (
-            <FamilyCreationScreen />
-          ) : (
-            <FamilyJoinScreen />
-          ) // Render the appropriate screen component based on role if logged in but no familyId
+          <OnboardingStack />// Render the appropriate screen component based on role if logged in but no familyId
         ) : (
           state.user?.role === 'Supervisor' ? (
             <SupervisorStack /> 

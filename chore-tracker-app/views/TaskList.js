@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+
 import { getTaskByUser, updateTaskStatus } from "../services/app";  
 import { AuthContext } from "../components/authContext"; 
 
@@ -8,25 +9,24 @@ export default function TaskList() {
   const [tasks, setTasks] = useState([]);
   const { state } = useContext(AuthContext);
   const token = state.userToken;
+  const navigation = useNavigation();
 
   useFocusEffect(
     useCallback (() => {
         async function fetchTasks() {
             try{
                 const data = await getTaskByUser(token); 
-                console.log('backend return===============:', data);// debug
+                console.log('Backend return===============:', data);// debug
                 setTasks(data); // return json array
                 } catch (error) {
-                console.error("get user tasks failed", error);
+                console.error("Get user tasks failed", error);
             }
         }
         console.log('TaskList got foucus');//
-        console.log('token now:', token);//
+        console.log('Token is:', token);//
         if (token) fetchTasks();
     }, [token])
   )
-  
-
 
   const renderStars = (count) => {
     return (
@@ -49,15 +49,28 @@ export default function TaskList() {
       if (!task) return;
       
       // Toggle between For_Approval and Pending
-      const newStatus = task.status === 'For_Approval' ? 'Pending' : 'For_Approval';
-      
-      const updated = await updateTaskStatus(id, newStatus, token);
-      setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status: updated.status } : t)));
+      if (task.status === 'For_Approval') {
+        const newStatus = 'Pending';
+        const updated = await updateTaskStatus(id, newStatus, token);
+        setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status: updated.status } : t)));
+      } else {
+        Alert.alert("Action Required", "Please submit photo proof for this task.");
+      }
     } catch (error) {
-      console.error('update status failed', error);
+      console.error('Update status failed', error);
     }
   };
 
+  // Handle navigation to proof upload page
+  const navigateToProof = (task) => {
+    console.log('On press triggered, navigating to Proof Upload page.')
+    navigation.navigate('ProofUpload', {
+      taskId: task.id,
+      taskTitle: task.title
+    });
+  };
+
+  // Task rendering
   const renderTask = ({ item }) => {
     // Map status to UI states
     const isChecked = item.status === 'For_Approval' || item.status === 'Completed';
@@ -65,8 +78,7 @@ export default function TaskList() {
     const isPending = item.status === 'Pending' || !item.status;
 
     const showDetail = () => {
-      console.log('长按触发，弹窗应该出现');// debug
-      
+      console.log('Long press triggered, showing task details');// debug
       Alert.alert(
         'Task Details',
         `Description: ${item.description}\n`,
@@ -74,10 +86,19 @@ export default function TaskList() {
       );
     };
 
+    // Handle OnPress action based on task status
+    const handlePress = () => {
+      if (isPending || isRejected) {
+        navigateToProof(item);
+      } else if (item.status === 'For_Approval') {
+        toggleDone(item.id); // User can toogle it back to Pending
+      }
+    };
+
     return (
       <TouchableOpacity
         style={styles.taskBox}
-        onPress={() => toggleDone(item.id)}
+        onPress={handlePress}
         onLongPress={showDetail}
         activeOpacity={0.7}
       >
@@ -120,7 +141,7 @@ export default function TaskList() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Today's Task</Text>
+      <Text style={styles.title}>Your Tasks</Text>
       <FlatList
         data={tasks}
         renderItem={renderTask}
