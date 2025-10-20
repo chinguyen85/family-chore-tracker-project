@@ -19,45 +19,62 @@ const ProofUploadScreen = () => {
     const [loading, setLoading] = useState(false);
 
     // IMAGE HANDLER
-    const requestPermissions = async (type) => {
+    const handleImagePick = async (source) => {
         let permission;
-        if (type === 'camera') {
-            permission = await ImagePicker.requestCameraPermissionsAsync();
-        } else {
-            permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        }
-
-        if (permission.status !== 'granted') {
-            Alert.alert('Permission Required', `We need ${type} access to use this feature.`);
-            return false;
-        }
-        return true;
-    };
-
-    const pickImage = async (source) => {
-        let granted = false;
-        let launchFunction;
-
+        
         if (source === 'camera') {
-            granted = await requestPermissions('camera');
-            launchFunction = ImagePicker.launchCameraAsync;
-        } else {
-            granted = await requestPermissions('gallery');
-            launchFunction = ImagePicker.launchImageLibraryAsync;
-        }
+            // Get current camera permission status
+            permission = await ImagePicker.getCameraPermissionsAsync();
+            if (permission.status !== 'granted') {
+                // Request camera permission if not granted
+                permission = await ImagePicker.requestCameraPermissionsAsync();
+            }
 
-        if (!granted) return;
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission Denied', 'Camera access is required to take a photo.');
+                return;
+            }
 
-        let result = await ImagePicker.launchImageLibraryAsync({
-            // mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            mediaTypes: [ImagePicker.MediaType.Images],
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 0.8,
-        });
+            console.log('Launching Camera...');
+            let result = await ImagePicker.launchCameraAsync({
+                mediaTypes: [ImagePicker.MediaType.Images],
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 0.6,
+            });
 
-        if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
+            if (!result.canceled && result.assets && result.assets.length > 0) {
+                setImageUri(result.assets[0].uri);
+            } else {
+                console.log('Camera operation cancelled or failed.');
+            }
+
+        } else if (source === 'gallery') {
+            // Get current media library permission status
+            permission = await ImagePicker.getMediaLibraryPermissionsAsync();
+            if (permission.status !== 'granted') {
+                // Request media library permission if not granted
+                permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            }
+
+            if (permission.status !== 'granted') {
+                Alert.alert('Permission Denied', 'Gallery access is required to pick a photo.');
+                return;
+            }
+
+            console.log('Launching Image Library...');
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: [ImagePicker.MediaType.Images],
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 0.6,
+            });
+
+            if (!result.canceled && result.assets && result.assets.length > 0) {
+                setImageUri(result.assets[0].uri);
+            } else {
+                console.log('Gallery operation cancelled or failed.');
+            }
         }
     };
     
@@ -72,8 +89,8 @@ const ProofUploadScreen = () => {
         const formData = new FormData();
         
         // Append the image file type and name based on the server setup
-        const uriParts = imageUri.split('.');
-        const fileType = uriParts[uriParts.length - 1];
+        const extension = imageUri.split('.');
+        const fileType = extension[extension.length - 1];
         
         formData.append('proofImage', {
             uri: imageUri,
@@ -86,8 +103,9 @@ const ProofUploadScreen = () => {
         formData.append('taskId', taskId);
 
         try {
+            console.log('Submitting proof to backend...');
             // Call API function
-            await submitProof(formData, token);
+            const response = await submitProof(formData, token);
 
             Alert.alert('Success!', 'Proof submitted for approval.', [
                 {
@@ -128,28 +146,27 @@ const ProofUploadScreen = () => {
             {/* Photo Upload */}
             <View style={styles.photoUploadContainer}>
                 <TouchableOpacity style={styles.uploadButton}
-                    onPress={() => pickImage('camera')}
+                    onPress={() => handleImagePick('camera')}
                     disabled={loading}
                 >
-                    <Ionicons name="camera-outline" size={40} color={styles.uploadButtonText.color} />
+                    <Ionicons name="camera-outline" size={20} color={styles.uploadButtonText.color} />
                     <Text style={styles.uploadButtonText}>Take Photo</Text>
                 </TouchableOpacity>
                 <View style={styles.separatorContainer}>
                     <Text style={styles.separatorText}>OR</Text>
                 </View>
                 <TouchableOpacity style={styles.uploadButton}
-                    onPress={() => pickImage('gallery')}
+                    onPress={() => handleImagePick('gallery')}
                     disabled={loading}
                 >
-                    <Ionicons name="images-outline" size={40} color={styles.uploadButtonText.color} />
+                    <Ionicons name="images-outline" size={20} color={styles.uploadButtonText.color} />
                     <Text style={styles.uploadButtonText}>Gallery Upload</Text>
                 </TouchableOpacity>
             </View>
 
             {/* Notes Input */}
             <Text style={styles.labelText}>Notes (Optional)</Text>
-            <TextInput
-                style={[styles.input, styles.notesInput]}
+            <TextInput style={[styles.input, styles.notesInput]}
                 placeholder="Add any necessary notes for the supervisor..."
                 value={notes}
                 onChangeText={setNotes}
@@ -240,7 +257,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 12,
-        marginHorizontal: 5,
+        marginHorizontal: 0,
         borderRadius: 8,
         backgroundColor: '#E6E6E6',
     },
@@ -274,12 +291,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 15,
+        marginHorizontal: 10,
     },
     separatorText: {
         width: 30,
         textAlign: 'center',
         color: '#999',
         fontSize: 16,
+        fontWeight: 'bold',
     },
     button: {
         backgroundColor: '#007AFF',
