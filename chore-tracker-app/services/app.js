@@ -27,7 +27,7 @@ export const register = async ({ fullName, email, password, role }) => {
 
 // login
 export const login = async (email, password) => {
-    console.log(' Attempting login to:', `${BASE_URL}/login`);
+    console.log(' Attempting login to:', `${BASE_URL}/login`); //
     try {
         const response = await fetch(`${BASE_URL}/login`, {
             method: 'POST',
@@ -85,27 +85,20 @@ export const getFamilyMembers = async (token) => {
   return fetchWithAuth("/members", "GET", token);
 };
 
-// create axios
-const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
 // Get all family tasks
 export const getAllTasks = async (token) => {
   try {
-    const response = await api.get("/tasks", {
+    const response = await fetch(`${BASE_URL}/tasks`, {
+      method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
     });
-    return response.data;
+    return handleResponse(response);
   } catch (error) {
-    const status = error.response?.status;
-    const message = error.response?.data?.error || error.message || "Get All Tasks Failed";
-    console.error("Get All Tasks error:", { status, message, url: "/tasks" });
+    const message = error.message || "Get All Tasks Failed";
+    console.error("Get All Tasks error:", { message, url: "/tasks" });
     throw new Error(message);
   }
 };
@@ -113,16 +106,17 @@ export const getAllTasks = async (token) => {
 // Get one user's tasks
 export const getTaskByUser = async (token) => {
   try {
-    const response = await api.get("/tasks/my", {
+    const response = await fetch(`${BASE_URL}/tasks/my`, {
+      method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
     });
-    return response.data;
+    return handleResponse(response);
   } catch (error) {
-    const status = error.response?.status;
-    const message = error.response?.data?.error || error.message || "Get My Tasks Failed";
-    console.error("Get My Tasks error:", { status, message, url: "/tasks/my" });
+    const message = error.message || "Get My Tasks Failed";
+    console.error("Get My Tasks error:", { message, url: "/tasks/my" });
     throw new Error(message);
   }
 };
@@ -130,20 +124,18 @@ export const getTaskByUser = async (token) => {
 // Update task status
 export const updateTaskStatus = async (taskId, status, token) => {
   try {
-    const response = await api.patch(
-      `/tasks/status/${taskId}`,
-      { status }, // body data
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
+    const response = await fetch(`${BASE_URL}/tasks/status/${taskId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status }),
+    });
+    return handleResponse(response);
   } catch (error) {
-    const httpStatus = error.response?.status;
-    const message = error.response?.data?.error || error.message || "Update status failed";
-    console.error("Update Task Status error:", { httpStatus, message, url: `/tasks/status/${taskId}`, payload: { status } });
+    const message = error.message || "Update status failed";
+    console.error("Update Task Status error:", { message, url: `/tasks/status/${taskId}`, payload: { status } });
     throw new Error(message);
   }
 };
@@ -153,19 +145,23 @@ export const postTask = async (taskData, token) => {
   try {
     // Debug outbound payload
     console.log("POST /tasks payload:", taskData);
-    const response = await api.post("/tasks", taskData, {
+    const response = await fetch(`${BASE_URL}/tasks`, {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
+      body: JSON.stringify(taskData),
     });
-    return response.data;
+    return handleResponse(response);
   } catch (error) {
-    const status = error.response?.status;
-    const message = error.response?.data?.error || error.message || "Create task failed";
-    console.error("Create task error:", { status, message, url: "/tasks", payload: taskData });
+    const message = error.message || "Ceate task failed";
+    console.error("Create task error:", { message, url: "/tasks", payload: taskData });
     throw new Error(message);
   }
-};
+
+
+}
 
 // Call proof submit endpoint
 const fetchWithFormAuth = async (endpoint, token, formData) => {
