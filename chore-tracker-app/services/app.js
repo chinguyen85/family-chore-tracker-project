@@ -27,7 +27,7 @@ export const register = async ({ fullName, email, password, role }) => {
 
 // login
 export const login = async (email, password) => {
-    console.log(' Attempting login to:', `${BASE_URL}/login`);
+    console.log(' Attempting login to:', `${BASE_URL}/login`); //
     try {
         const response = await fetch(`${BASE_URL}/login`, {
             method: 'POST',

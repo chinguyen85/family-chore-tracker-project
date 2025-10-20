@@ -47,7 +47,7 @@ const CreateTask = ({ navigation }) => {
     );
   };
 
-  const toggleDatePicker = () => {
+  const toggleDatePicker = () => { // can close the picker
     setShowDatePicker(!showDatePicker);
   };
 
