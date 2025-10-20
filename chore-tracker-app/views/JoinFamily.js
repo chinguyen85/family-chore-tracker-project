@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
     },
     button: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#fa8d7aff',
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
@@ -158,10 +158,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     helpText: {
-        color: '#007AFF', 
+        color: '#fa8d7aff', 
         fontSize: 16,
         textDecorationLine: 'underline',
-        textDecorationColor: '#007AFF',
+        textDecorationColor: '#fa8d7aff',
     }
 });
 

@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs camera access to let you take a proof photo of your completed task.",
+        "NSPhotoLibraryUsageDescription": "This app needs photo library access to let you upload a photo as proof of your completed task."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +30,8 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-font"
     ]
   }
 }

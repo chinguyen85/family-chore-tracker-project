@@ -19,45 +19,63 @@ const ProofUploadScreen = () => {
     const [loading, setLoading] = useState(false);
 
     // IMAGE HANDLER
-    const requestPermissions = async (type) => {
+    const handleImagePick = async (source) => {
         let permission;
-        if (type === 'camera') {
-            permission = await ImagePicker.requestCameraPermissionsAsync();
-        } else {
-            permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        }
+        
+        try {
+            console.log(`Attempting to open ${source}...`);
+            if (source === 'camera') {
+                // Get current camera permission status
+                permission = await ImagePicker.getCameraPermissionsAsync();
 
-        if (permission.status !== 'granted') {
-            Alert.alert('Permission Required', `We need ${type} access to use this feature.`);
-            return false;
-        }
-        return true;
-    };
+                if (permission.status !== 'granted') {
+                    // Request camera permission if not granted
+                    permission = await ImagePicker.requestCameraPermissionsAsync();
+                }
+                if (permission.status !== 'granted') {
+                    Alert.alert('Permission Denied', 'Camera access is required to take a photo.');
+                    return;
+                }
 
-    const pickImage = async (source) => {
-        let granted = false;
-        let launchFunction;
+                console.log('Launching Camera...');
+                let result = await ImagePicker.launchCameraAsync({
+                    mediaTypes: ['images'],
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 0.6,
+                });
+                if (!result.canceled && result.assets && result.assets.length > 0) {
+                    setImageUri(result.assets[0].uri); // Set imageUri when the cancellation is false and the new assets array contains data.
+                } else {
+                    console.log('Camera operation cancelled or failed:', JSON.stringify(result, null, 2));
+                }
+            } else if (source === 'gallery') {
+                permission = await ImagePicker.getMediaLibraryPermissionsAsync();
 
-        if (source === 'camera') {
-            granted = await requestPermissions('camera');
-            launchFunction = ImagePicker.launchCameraAsync;
-        } else {
-            granted = await requestPermissions('gallery');
-            launchFunction = ImagePicker.launchImageLibraryAsync;
-        }
-
-        if (!granted) return;
-
-        let result = await ImagePicker.launchImageLibraryAsync({
-            // mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            mediaTypes: [ImagePicker.MediaType.Images],
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 0.8,
-        });
-
-        if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
+                if (permission.status !== 'granted') {
+                    permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                }
+                if (permission.status !== 'granted') {
+                    Alert.alert('Permission Denied', 'Gallery access is required to pick a photo.');
+                    return;
+                }
+                
+                console.log('Launching Image Library...');
+                let result = await ImagePicker.launchImageLibraryAsync({
+                    mediaTypes: ['images'],
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 0.6,
+                });
+                if (!result.canceled && result.assets && result.assets.length > 0) {
+                    setImageUri(result.assets[0].uri);
+                } else {
+                    console.log('Gallery operation cancelled or failed:', JSON.stringify(result, null, 2));
+                }
+            }
+        } catch (error) {
+            console.error(`${source} error:`, error);
+            Alert.alert('Error', `Failed to open ${source}: ${error.message}`);
         }
     };
     
@@ -72,8 +90,8 @@ const ProofUploadScreen = () => {
         const formData = new FormData();
         
         // Append the image file type and name based on the server setup
-        const uriParts = imageUri.split('.');
-        const fileType = uriParts[uriParts.length - 1];
+        const extension = imageUri.split('.');
+        const fileType = extension[extension.length - 1];
         
         formData.append('proofImage', {
             uri: imageUri,
@@ -84,10 +102,12 @@ const ProofUploadScreen = () => {
         // Append other fields
         formData.append('notes', notes);
         formData.append('taskId', taskId);
+        console.log('FormData contents:', { taskId, notes, imageUri });
 
         try {
+            console.log('Submitting proof to backend...');
             // Call API function
-            await submitProof(formData, token);
+            const response = await submitProof(formData, token);
 
             Alert.alert('Success!', 'Proof submitted for approval.', [
                 {
@@ -128,28 +148,27 @@ const ProofUploadScreen = () => {
             {/* Photo Upload */}
             <View style={styles.photoUploadContainer}>
                 <TouchableOpacity style={styles.uploadButton}
-                    onPress={() => pickImage('camera')}
+                    onPress={() => handleImagePick('camera')}
                     disabled={loading}
                 >
-                    <Ionicons name="camera-outline" size={40} color={styles.uploadButtonText.color} />
+                    <Ionicons name="camera-outline" size={20} color={styles.uploadButtonText.color} />
                     <Text style={styles.uploadButtonText}>Take Photo</Text>
                 </TouchableOpacity>
                 <View style={styles.separatorContainer}>
                     <Text style={styles.separatorText}>OR</Text>
                 </View>
                 <TouchableOpacity style={styles.uploadButton}
-                    onPress={() => pickImage('gallery')}
+                    onPress={() => handleImagePick('gallery')}
                     disabled={loading}
                 >
-                    <Ionicons name="images-outline" size={40} color={styles.uploadButtonText.color} />
+                    <Ionicons name="images-outline" size={20} color={styles.uploadButtonText.color} />
                     <Text style={styles.uploadButtonText}>Gallery Upload</Text>
                 </TouchableOpacity>
             </View>
 
             {/* Notes Input */}
             <Text style={styles.labelText}>Notes (Optional)</Text>
-            <TextInput
-                style={[styles.input, styles.notesInput]}
+            <TextInput style={[styles.input, styles.notesInput]}
                 placeholder="Add any necessary notes for the supervisor..."
                 value={notes}
                 onChangeText={setNotes}
@@ -240,7 +259,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 12,
-        marginHorizontal: 5,
+        marginHorizontal: 0,
         borderRadius: 8,
         backgroundColor: '#E6E6E6',
     },
@@ -274,15 +293,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 15,
+        marginHorizontal: 10,
     },
     separatorText: {
         width: 30,
         textAlign: 'center',
         color: '#999',
         fontSize: 16,
+        fontWeight: 'bold',
     },
     button: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#fa8d7aff',
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',
