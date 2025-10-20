@@ -1,7 +1,8 @@
 const tasksRouter = require('express').Router()
 const tasksController = require('./tasksController')
 const { protect } = require('../middleware/auth')
-tasksRouter.use(protect)
+tasksRouter.use(protect);
+const upload = require('../middleware/upload')
 
 tasksRouter.get('/', tasksController.getAllTasks)
 
@@ -15,5 +16,8 @@ tasksRouter.delete('/:id', tasksController.deleteTask)
 
 //update task status
 tasksRouter.patch('/status/:id', tasksController.updateTaskStatus)
+
+// proof submission
+tasksRouter.post('/proof', upload.single('proofImage'), tasksController.submitProof)
 
 module.exports = tasksRouter

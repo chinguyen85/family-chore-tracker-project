@@ -36,7 +36,20 @@ const taskSchema = mongoose.Schema({
     type: String,
     enum: ['Pending', 'For_Approval', 'Completed', 'Rejected'],
     default: 'Pending'
-  }
+  },
+  // Fields for proof upload
+  proofImage: {
+    type: String,
+    required: false
+  },
+  proofNotes: {
+    type: String,
+    required: false
+  },
+  completedAt: {
+    type: Date,
+    required: false
+  },
 })
 
 taskSchema.set('toJSON', {
