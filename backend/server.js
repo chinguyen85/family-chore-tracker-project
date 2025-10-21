@@ -12,6 +12,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// set uploads static
+app.use('/uploads', express.static('uploads'));
+
 // Connect to MongoDB
 const connectDB = async () => {
     try {

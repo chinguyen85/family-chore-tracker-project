@@ -178,3 +178,24 @@ const fetchWithFormAuth = async (endpoint, token, formData) => {
 export const submitProof = async (formData, token) => {
     return fetchWithFormAuth('/proof', token, formData);
 }
+
+// delete a task
+export const deleteTask = async (taskId, token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    // DELETE may return 204 with no body
+    if (response.status === 204) {
+      return { success: true };
+    }
+    return handleResponse(response);
+  } catch (error) {
+    const message = error.message || 'Delete task failed';
+    console.error('Delete task error:', { message, url: `/tasks/${taskId}` });
+    throw new Error(message);
+  }
+}
