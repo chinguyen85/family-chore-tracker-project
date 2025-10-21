@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     loginLink: {
-        marginTop: 30,
+        marginTop: 20,
         alignSelf: 'center',
     },
     loginText: {
