@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -80,10 +80,11 @@ const SignupScreen = () => {
             <TouchableOpacity style={styles.button} onPress={handleSignup}>
                 <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
-            <Button
-                title="Already have an account? Sign In"
+            <TouchableOpacity style={styles.loginLink}
                 onPress={() => navigation.navigate('Login')}
-            />
+            >
+                <Text style={styles.loginText}>Already have an account? Sign In</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -153,13 +154,13 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '600',
     },
-    signInLink: {
-        marginTop: 20,
+    loginLink: {
+        marginTop: 30,
         alignSelf: 'center',
     },
-    signInText: {
+    loginText: {
         color: '#fa8d7aff',
-        fontSize: 14,
+        fontSize: 16,
     }
 });
 
