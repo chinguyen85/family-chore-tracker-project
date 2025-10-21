@@ -140,7 +140,6 @@ const updateTaskStatus = async (request, response) => {
 
     if (!newStatus) 
         return response.status(400).json({ error: 'Status is required' })
-    
 
     try {
         // find task
@@ -186,8 +185,6 @@ const submitProof = async (request, response) => {
     const { taskId, notes } = request.body;
     const userId = request.user.id;
     console.log('submitProof - userId:', userId, 'taskId:', taskId, 'notes:', notes);
-    
-    const task = await Task.findOne({ _id: taskId, assignTo: userId });
 
     if (!proofImagePath) {
         return response.status(400).json({ success: false, error: 'Proof image is required.' });

@@ -34,14 +34,6 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    // resetPasswordToken: {
-    //     type: String,
-    //     default: null
-    // },
-    // resetPasswordExpires: {
-    //     type: Date,
-    //     default: null
-    // }
 });
 
 // Customize JSON output to convert _id to a string and exclude sensitive information
@@ -51,8 +43,6 @@ userSchema.set('toJSON', {
         delete returnedObject._id;
         delete returnedObject.__v;
         delete returnedObject.password; // Exclude password hash
-        delete returnedObject.resetPasswordToken; // Exclude reset token
-        delete returnedObject.resetPasswordExpires; // Exclude reset expiry
     }
 });
 
@@ -61,7 +51,7 @@ userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next(); // Only hash if password is new or modified
     try {
         const salt = await bcrypt.genSalt(10); // Generate salt
-        this.password = await bcrypt.hash(this.password, salt); // Hash the  creation/joiningpassword with salt
+        this.password = await bcrypt.hash(this.password, salt); // Hash the password with salt
         next();
     } catch (err) {
         next(err);
