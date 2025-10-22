@@ -34,3 +34,6 @@ Content-Type: application/json
     "email": "testbabyy3@abc.com",
     "password": "password"
 }
+
+#member1@aa.com
+2E4159

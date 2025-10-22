@@ -13,11 +13,12 @@ export default function TaskList() {
 
   useFocusEffect(
     useCallback (() => {
+        let isActive = true;
         async function fetchTasks() {
             try{
                 const data = await getTaskByUser(token); 
                 console.log('Backend return===============:', data);// debug
-                setTasks(data); // return json array
+                if (isActive) setTasks(data); // return json array
                 } catch (error) {
                 console.error("Get user tasks failed", error);
             }
@@ -25,6 +26,7 @@ export default function TaskList() {
         console.log('TaskList got foucus');//
         console.log('Token is:', token);//
         if (token) fetchTasks();
+        return () => { isActive = false; };
     }, [token])
   )
 

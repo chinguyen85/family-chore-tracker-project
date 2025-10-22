@@ -11,19 +11,18 @@ import {
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../components/authContext";
 import { updateTaskStatus, deleteTask } from "../services/app";
-import Constants from 'expo-constants';
-
 
 //"uploads\\proofs\\proofImage-1761004989836.jpg"
 // http://123.456:3000/uploads/proofs/proofImage-1761004989836.jpg
-// const BASE_URL = Constants.expoConfig.extra.EXPO_PUBLIC_API_URL;
+
+// const BASE_URL = "http://10.18.190.21:3000";
 const BASE_URL = "http://192.168.0.126:3000";
+
 const getImageUrl = (path) => {
-  if (!path) 
-    return null;
-  const rightPath = path.replace(/\\/g, '/'); // global
+  if (!path) return null;
+  const rightPath = path.replace(/\\/g, "/"); // global
   return `${BASE_URL}/${rightPath}`;
-}
+};
 
 const TaskReview = () => {
   const route = useRoute();
@@ -31,7 +30,7 @@ const TaskReview = () => {
   const { state } = useContext(AuthContext);
   const token = state.userToken;
 
-  const task = route.params?.task;
+  const task = route.params?.task; //return task or undefined
 
   if (!task) {
     return (
@@ -90,7 +89,7 @@ const TaskReview = () => {
         <Text style={styles.value}>{task.title}</Text>
 
         <Text style={styles.label}>Status</Text>
-        <Text style={styles.value}>{task.status || "Pending"}</Text>
+        <Text style={styles.value}>{task.status}</Text>
 
         <Text style={styles.label}>Reward</Text>
         {renderStars(task.rewardValue)}
@@ -109,15 +108,20 @@ const TaskReview = () => {
         </Text>
 
         <Text style={styles.label}>Description</Text>
-        <Text style={styles.value}>{task.description || "-"}</Text>
+        <Text style={styles.value}>{task.description}</Text>
 
         {task.proofImage ? (
           <>
             <Text style={styles.label}>Proof Image</Text>
             {console.log(getImageUrl(task.proofImage))}
-            <Image 
-              source={{ uri: getImageUrl(task.proofImage)}}
-              style={{ width: 200, height: 200, borderRadius: 8, marginVertical: 8 }}
+            <Image
+              source={{ uri: getImageUrl(task.proofImage) }}
+              style={{
+                width: 200,
+                height: 200,
+                borderRadius: 8,
+                marginVertical: 8,
+              }}
               resizeMode="cover"
             />
           </>

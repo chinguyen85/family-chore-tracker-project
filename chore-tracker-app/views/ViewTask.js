@@ -17,8 +17,6 @@ const FamilyTaskList = () => {
   const token = state.userToken;
   const navigation = useNavigation();
 
-  // No modal; long-press will show a simple Alert with details
-
   // Fetch on focus so returning from TaskReview refreshes the list
   useFocusEffect(
     useCallback(() => {
@@ -26,6 +24,7 @@ const FamilyTaskList = () => {
       async function fetchTasks() {
         try {
           const data = await getAllTasks(token);
+          console.log('Backend return=====:', data);// debug
           if (isActive) setTasks(data);
         } catch (error) {
           console.error("get family tasks failed", error);
