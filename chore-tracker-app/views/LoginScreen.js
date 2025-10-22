@@ -7,7 +7,6 @@ import { AuthContext } from '../components/authContext';
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const { logIn } = useContext(AuthContext);
 
   const handleLogin = async () => {
@@ -16,7 +15,6 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
 
-    setLoading(true);
     try {
       console.log(' Logging in with:', email); //
       const response = await login(email, password);
@@ -26,10 +24,6 @@ const LoginScreen = ({ navigation }) => {
         // store token and user data to local
         await logIn(response.token, response.user);
         // to the user role's page
-        if (response.user.role === 'Supervisor'){
-          logIn(response.token, response.user);
-        }
-
 
         Alert.alert('Success', 'Login Succeed！');
         // after login，AuthContext will switch to MainNavigator
@@ -40,8 +34,6 @@ const LoginScreen = ({ navigation }) => {
       console.error(' Login error:', error); // debug
       const errorMsg = error.message || error.toString() || 'Please check your email and password';
       Alert.alert('Login failed', errorMsg);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -65,9 +57,6 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Your Email"
           value={email}
           onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          editable={!loading}
         />
       </View>
 
@@ -79,35 +68,27 @@ const LoginScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
-          editable={!loading}
         />
       </View>
       
       {/* Forgot password link */}
       <TouchableOpacity style={styles.forgotPasswordLink}
         onPress={() => navigation.navigate('ForgotPassword')}
-        disabled={loading}
       >
         <Text style={styles.forgotPasswordText}>Forgot Password? Click here to reset</Text>
       </TouchableOpacity>
 
       {/* Login button */}
       <TouchableOpacity
-        style={[styles.button, loading && styles.buttonDisabled]}
+        style={styles.button}
         onPress={handleLogin}
-        disabled={loading}
       >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Login</Text>
-        )}
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.linkButton}
         onPress={() => navigation.navigate('Signup')}
-        disabled={loading}
       >
         <Text style={styles.linkText}>Don't have an account? Sign up for free</Text>
       </TouchableOpacity>
@@ -115,7 +96,6 @@ const LoginScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.debugButton}
         onPress={clearStorage}
-        disabled={loading}
       >
         <Text style={styles.debugText}>clean local cache（for testing）</Text>
       </TouchableOpacity>
@@ -160,9 +140,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 10,
-  },
-  buttonDisabled: {
-    backgroundColor: '#999',
   },
   buttonText: {
     color: '#fff',
