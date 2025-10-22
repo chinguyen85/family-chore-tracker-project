@@ -9,6 +9,7 @@ const initialState = {
     user: null, // Store user data including role and familyId
 };
 
+// Reducer for authentication state changes
 const authReducer = (prevState, action) => {
     switch (action.type) {
         case 'RESTORE_TOKEN':
@@ -52,7 +53,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, initialState);
 
-    // Check AsyncStorage for token on app startup
+    // Check AsyncStorage for saved token on app startup
     useEffect(() => {
         const bootstrapAsync = async () => {
             let userToken = null;
@@ -91,11 +92,12 @@ export const AuthProvider = ({ children }) => {
                 await AsyncStorage.setItem('userData', JSON.stringify(newUserData));
                 dispatch ({ type: 'UPDATE_USER', userUpdates});
             },
-            state,
+            state,  // Include the current state object for components to read state values
         }),
         [state]
     );
 
+    // Render the context provider    
     return (
         <AuthContext.Provider value={authContext}>
             {children}
