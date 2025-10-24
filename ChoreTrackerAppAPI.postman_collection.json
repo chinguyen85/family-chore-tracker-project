@@ -47,7 +47,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"fullName\": \"Kid Member 1\",\n    \"email\": \"member1@family.com\",\n    \"password\": \"childPass456\"\n}",
+					"raw": "{\n    \"fullName\": \"Cece Guardian\",\n    \"email\": \"guardian@family.com\",\n    \"password\": \"cecePass123\",\n    \"role\": \"Supervisor\"\n    // inviteCode: 12C37E\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -223,7 +223,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "// {\n//     \"email\": \"supervisor@family.com\",\n//     \"password\": \"securePass123\"\n// }\n\n{\n    \"email\": \"member1@family.com\",\n    \"password\": \"newPass456\"\n}",
+					"raw": "// {\n//     \"email\": \"supervisor@family.com\",\n//     \"password\": \"securePass123\"\n// }\n\n{\n    \"email\": \"member1@family.com\",\n    \"password\": \"newPass456\"\n}\n\n// {\n//     \"email\": \"member2@family.com\",\n//     \"password\": \"childPass123\"\n// }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1124,6 +1124,322 @@
 					"body": "{\n    \"success\": true,\n    \"count\": 2,\n    \"data\": [\n        {\n            \"email\": \"supervisor@family.com\",\n            \"fullName\": \"Parent Supervisor\",\n            \"role\": \"Supervisor\",\n            \"starTotal\": 0,\n            \"id\": \"68ed4fcdab3df8e18814bd52\"\n        },\n        {\n            \"email\": \"member1@family.com\",\n            \"fullName\": \"Kid Member 1\",\n            \"role\": \"Member\",\n            \"starTotal\": 0,\n            \"id\": \"68ed5087ab3df8e18814bd55\"\n        }\n    ]\n}"
 				}
 			]
+		},
+		{
+			"name": "Get All Tasks",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer: {{my_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"familyId\": \"68ed59889095b6529afa184b\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/tasks",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tasks"
+					]
+				},
+				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "Create Task",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer: {{my_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Take the trash out\",\n    \"rewardValue\": 2,\n    \"dueDate\" : \"2025-10-18\",\n    \"familyId\": \"68ed59889095b6529afa184b\",\n    \"assignTo\": \"68ed5087ab3df8e18814bd55\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/tasks",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tasks"
+					]
+				},
+				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+			},
+			"response": [
+				{
+					"name": "Create Task-Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer: {{my_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Take the trash out\",\n    \"rewardValue\": 2,\n    \"dueDate\" : \"2025-10-18\",\n    \"familyId\": \"68ed59889095b6529afa184b\",\n    \"assignTo\": \"68ed5087ab3df8e18814bd55\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/tasks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tasks"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Length",
+							"value": "229"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 17 Oct 2025 15:31:38 GMT"
+						},
+						{
+							"key": "Etag",
+							"value": "W/\"e5-5DTslXTNzFWFdFdcKy5LRJ4OgdQ\""
+						},
+						{
+							"key": "Ngrok-Agent-Ips",
+							"value": "85.23.68.128"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"title\": \"Take the trash out\",\n    \"description\": \"\",\n    \"rewardValue\": 2,\n    \"dueDate\": \"2025-10-18T00:00:00.000Z\",\n    \"familyId\": \"68ed59889095b6529afa184b\",\n    \"assignTo\": [\n        \"68ed5087ab3df8e18814bd55\"\n    ],\n    \"status\": \"Pending\",\n    \"id\": \"68f2615ab81d9cceb47d58fe\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Task by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer: {{my_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"familyId\": \"68ee94d40c10de36bffa94da\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/tasks/68f2615ab81d9cceb47d58fe",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tasks",
+						"68f2615ab81d9cceb47d58fe"
+					]
+				},
+				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "Update Task by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer: {{my_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"Take trash from kitchen & bathroom\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/tasks/68f2615ab81d9cceb47d58fe",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tasks",
+						"68f2615ab81d9cceb47d58fe"
+					]
+				},
+				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "Update Task Status by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer: {{my_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\": \"For_Approval\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/tasks/status/68f2615ab81d9cceb47d58fe",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tasks",
+						"status",
+						"68f2615ab81d9cceb47d58fe"
+					]
+				},
+				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+			},
+			"response": []
 		}
 	],
 	"event": [
